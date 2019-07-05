@@ -1,0 +1,5 @@
+calendar_hours.settings:
+  title: 'Hours Calendars'
+  parent: system.admin_config_services
+  route_name: entity.hours_calendar.collection
+  description: 'Import and configure Calendars from an external provider to administer opening hours'

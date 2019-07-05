@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @file
+ * Contains calendar_hours_server.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function calendar_hours_server_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the hours module.
+    case 'help.page.calendar_hours_server':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Connect to Google Calendar API') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+

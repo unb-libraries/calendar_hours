@@ -1,0 +1,17 @@
+calendar_hours.demo:
+  path: '/admin/config/services/hours/client/demo'
+  defaults:
+    _controller: 'Drupal\calendar_hours_client\Controller\HoursCalendarClientDemoController::demo'
+    _title: 'Calendar Hours: Demo'
+  requirements:
+    _permission: 'administer hours calendars'
+  options:
+    _admin_route: TRUE
+
+calendar_hours.settings.client:
+  path: '/admin/config/services/hours/client'
+  defaults:
+    _form: 'Drupal\calendar_hours_client\Form\HoursCalendarClientSettingsForm'
+    _title: 'Calendar Hours: Client Settings'
+  requirements:
+    _permission: 'administer hours calendars'

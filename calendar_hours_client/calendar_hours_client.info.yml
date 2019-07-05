@@ -1,0 +1,5 @@
+name: 'Calendar Hours Client'
+type: module
+description: 'Client Application to query and display Hours'
+core: 8.x
+package: Calendar Hours

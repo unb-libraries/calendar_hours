@@ -1,0 +1,31 @@
+entity.hours_calendar.collection:
+  path: '/admin/config/services/hours/calendars'
+  defaults:
+    _entity_list: 'hours_calendar'
+    _title: 'Calendar Hours: Available Calendars'
+  requirements:
+    _permission: 'administer hours calendars'
+
+entity.hours_calendar.edit_form:
+  path: '/admin/config/services/hours/calendars/{hours_calendar}/edit'
+  defaults:
+    _entity_form: 'hours_calendar.edit'
+    _title: 'Edit Hours Calendar'
+  requirements:
+    _permission: 'administer hours calendars'
+
+entity.hours_calendar.enable:
+  path: '/admin/config/services/hours/calendars/enable'
+  defaults:
+    _entity_form: 'hours_calendar.enable'
+    _title: 'Enable Hours Calendar'
+  requirements:
+    _permission: 'administer hours calendars'
+
+entity.hours_calendar.disable:
+  path: '/admin/config/services/hours/calendars/{hours_calendar}/disable'
+  defaults:
+    _entity_form: 'hours_calendar.disable'
+    _title: 'Disable Hours Calendar'
+  requirements:
+    _permission: 'administer hours calendars'

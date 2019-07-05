@@ -1,0 +1,7 @@
+services:
+  plugin.manager.calendar_hours.calendar_api:
+    class: 'Drupal\calendar_hours_server\Plugin\CalendarApiPluginManager'
+    parent: default_plugin_manager
+  plugin.manager.calendar_hours.formatter:
+    class: 'Drupal\calendar_hours_server\Plugin\FormatterPluginManager'
+    parent: default_plugin_manager

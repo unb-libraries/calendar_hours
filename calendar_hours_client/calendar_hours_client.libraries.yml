@@ -1,0 +1,24 @@
+momentjs:
+  remote: https://github.com/moment/moment
+  version: 2.24.0
+  license:
+    name: MIT
+    url: https://github.com/moment/moment/blob/develop/LICENSE
+    gpl-compatible: true
+  js:
+    https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js: { type: external, minified: true }
+
+calendar-hours:
+  version: 1.x
+  js:
+    js/calendar_hours.js: {}
+    js/models/HoursCalendarModel.js: {}
+    js/views/HoursCalendarView.js: {}
+    js/templates/HoursCalendarTemplate.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/backbone
+    - core/jquery
+    - core/jquery.once
+    - calendar_hours_client/momentjs

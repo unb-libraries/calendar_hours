@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * Contains calendar_hours_client.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+const CALENDAR_HOURS__SETTINGS_CLIENT = 'calendar_hours_client.settings';
+
+/**
+ * Implements hook_help().
+ */
+function calendar_hours_client_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the calendar_hours_client module.
+    case 'help.page.calendar_hours_client':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Client Application to query and display Hours') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function calendar_hours_client_preprocess_html(&$variables) {
+  $hours_base_url = \Drupal::config(CALENDAR_HOURS__SETTINGS_CLIENT)->get('base_url');
+  if (empty($hours_base_url)) {
+    $hours_base_url = \Drupal::request()->getSchemeAndHttpHost() . '/api/hours/';
+  }
+  $variables['#attached']['drupalSettings']['calendarHours']['baseUrl'] = $hours_base_url;
+
+  $refresh_interval = \Drupal::config(CALENDAR_HOURS__SETTINGS_CLIENT)->get('refresh_interval');
+  if (empty($refresh_interval)) {
+    $refresh_interval = 900000;
+  }
+  $variables['#attached']['drupalSettings']['calendarHours']['refreshInterval'] = $refresh_interval;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function calendar_hours_client_theme($existing, $type, $theme, $path) {
+  return [
+    'calendar_hours_demo' => [
+      'variables' => [],
+    ],
+  ];
+}

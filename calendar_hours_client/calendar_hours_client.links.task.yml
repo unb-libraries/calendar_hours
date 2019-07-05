@@ -1,0 +1,9 @@
+calendar_hours.settings.client:
+  route_name: calendar_hours.settings.client
+  title: 'Client'
+  base_route: entity.hours_calendar.collection
+
+calendar_hours.demo:
+  route_name: calendar_hours.demo
+  title: 'Demo'
+  base_route: entity.hours_calendar.collection

@@ -1,0 +1,16 @@
+calendar_hours.hours_calendar.*:
+  type: config_entity
+  label: 'Hours Calendar'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    title:
+      type: label
+      label: 'Title'
+    foreign_id:
+      type: string
+      label: 'Foreign ID'
+    vendor:
+      type: string
+      label: 'Provider'

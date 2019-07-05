@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @file
+ * Contains calendar_hours_google.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function calendar_hours_google_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the hours module.
+    case 'help.page.calendar_hours_google':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Administer opening hours via externally provided calendars.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+

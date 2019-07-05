@@ -1,0 +1,15 @@
+{
+  "name": "unb-libraries/calendar_hours",
+  "description": "Maintain hours through external calendars.",
+  "type": "drupal-module",
+  "license": "MIT",
+  "homepage": "https://github.com/unb-libraries/calendar_hours",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://github.com/unb-libraries/calendar_hours/issues",
+    "source": "https://github.com/unb-libraries/calendar_hours"
+  },
+  "require": {
+    "drupal/gapi": "1.x-dev"
+  }
+}
