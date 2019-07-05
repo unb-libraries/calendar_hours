@@ -9,6 +9,12 @@
     "issues": "https://github.com/unb-libraries/calendar_hours/issues",
     "source": "https://github.com/unb-libraries/calendar_hours"
   },
+  "authors": [
+    {
+      "name": "UNB Libraries",
+      "email": "libsystems@unb.ca"
+    }
+  ],
   "require": {
     "drupal/gapi": "1.x-dev"
   }
