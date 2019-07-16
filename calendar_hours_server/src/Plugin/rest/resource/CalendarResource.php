@@ -123,8 +123,8 @@ class CalendarResource extends ResourceBase {
     );
     $response->addCacheableDependency([
       '#cache' => [
-        // Cache for one day.
-        'max-age' => 86400,
+        // Cache for 15 minutes.
+        'max-age' => 900,
       ],
     ]);
 
