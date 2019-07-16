@@ -7,18 +7,18 @@ HoursCalendarTemplate = _.template(
       "<% if (display.today === 'live') { %>" +
         "<li>" +
           "<% if (status === 'open') { %>" +
-            "Open until <%= closesNext %>." +
+            "Closes <%= closesNext %>." +
           "<% } else { %>" +
-            "Closed until <%= opensNext %>." +
+            "Opens <%= opensNext %>." +
           "<% } %>" +
         "</li>" +
       "<% } else if (display.today === 'live-c' && status === 'open') { %>" +
         "<li>" +
-            "Open until <%= closesNext %>." +
+            "Closes <%= closesNext %>." +
         "</li>" +
       "<% } else if (display.today === 'live-co' && status === 'open') { %>" +
         "<li>" +
-          "Open until <%= closesNext %>. Reopens <%= opensNext %>." +
+          "Closes <%= closesNext %>. Reopens <%= opensNext %>." +
         "</li>" +
       "<% } else { %>" +
         "<% if (hours.length > 0) { %>" +
