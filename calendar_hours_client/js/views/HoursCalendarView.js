@@ -50,12 +50,12 @@
       var dateFormat = this.$el.data('ch-format-date') || DEFAULT_DATE_FORMAT;
 
       var opensNextFormat = timeFormat;
-      if (this.$el.hasClass('ch-live-d') || this.$el.hasClass('ch-live-do') || ((this.$el.hasClass('ch-live-nsd') || this.$el.hasClass('ch-live-nsdo')) && moment(this.model.getReopensAt()).format('Y-MM-DD') !== date)) {
+      if (this.$el.hasClass('ch-live-d') || this.$el.hasClass('ch-live-do') || ((this.$el.hasClass('ch-live-nsd') || this.$el.hasClass('ch-live-nsdo')) && moment(this.model.getReopensAt()).format('Y-MM-DD HH:mm') >= moment().add(1, 'days').format('Y-MM-DD HH:mm'))) {
         opensNextFormat = dateFormat + ', ' + timeFormat;
       }
 
       var closesNextFormat = timeFormat;
-      if (this.$el.hasClass('ch-live-d') || this.$el.hasClass('ch-live-dc') || ((this.$el.hasClass('ch-live-nsd') || this.$el.hasClass('ch-live-nsdc')) && moment(this.model.getClosesAt()).format('Y-MM-DD') !== date)) {
+      if (this.$el.hasClass('ch-live-d') || this.$el.hasClass('ch-live-dc') || ((this.$el.hasClass('ch-live-nsd') || this.$el.hasClass('ch-live-nsdc')) && moment(this.model.getClosesAt()).format('Y-MM-DD HH:mm') >= moment().add(1, 'days').format('Y-MM-DD HH:mm'))) {
         closesNextFormat = dateFormat + ', ' + timeFormat;
       }
 
