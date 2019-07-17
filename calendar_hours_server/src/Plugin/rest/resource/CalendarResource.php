@@ -127,6 +127,7 @@ class CalendarResource extends ResourceBase {
         'max-age' => 900,
       ],
     ]);
+    $response->setMaxAge(900);
 
     return $response;
   }
