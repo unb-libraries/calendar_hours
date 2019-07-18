@@ -81,12 +81,14 @@
     currentBlock: function() {
       var now = moment().format('X');
       var currentBlock = undefined;
-      $.each(this.get('hours'), function (date, block) {
-        let from = moment(block.from).format('X');
-        let to = moment(block.to).format('X');
-        if (from <= now && now <= to) {
-          currentBlock = block;
-        }
+      $.each(this.get('hours'), function (date, blocks) {
+        $.each(blocks, function(index, block) {
+          let from = moment(block.from).format('X');
+          let to = moment(block.to).format('X');
+          if (from <= now && now <= to) {
+            currentBlock = block;
+          }
+        });
       });
       return currentBlock;
     },
