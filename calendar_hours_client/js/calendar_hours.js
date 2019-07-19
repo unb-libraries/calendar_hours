@@ -11,16 +11,13 @@
           var model = undefined;
           if (Drupal.calendarHours.collection.has(calendarId)) {
             model = Drupal.calendarHours.collection.get({id: calendarId});
-            console.log("Loaded from Collection.");
           } else {
             if (Drupal.calendarHours.collection.canRestore(calendarId)) {
               model = Drupal.calendarHours.collection.restore(calendarId);
-              console.log("Restored from LocalStorage.");
             } else {
               model = new Drupal.calendarHours.HoursCalendarModel({id: calendarId});
               Drupal.calendarHours.collection.add(model);
               model.save();
-              console.log("Created from scratch.");
             }
           }
 

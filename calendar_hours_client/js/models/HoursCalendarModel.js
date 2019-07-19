@@ -29,6 +29,7 @@
       reopensAt: "",
       closesAt: "",
       hours: {},
+      open: undefined,
       lastRefreshed: undefined,
     },
 
@@ -103,10 +104,11 @@
     },
 
     refreshHours: function() {
-      if (this.get("lastRefreshed") === undefined || moment(this.get("lastRefreshed")) <= moment().subtract(60, 'seconds')) {
+      if (this.get("lastRefreshed") === undefined || moment(this.get("lastRefreshed")) <= moment().subtract(900, 'seconds')) {
         this.fetchFromRemote();
       } else {
-        this.fetch();
+        this.set('open', this.isOpenNow());
+        this.save();
       }
     },
 
@@ -119,7 +121,8 @@
           this.set('hours', jsonResponse.hours);
           this.set('closesAt', jsonResponse.closesAt);
           this.set('reopensAt', jsonResponse.reopensAt);
-          this.set("lastRefreshed", lastRefreshed);
+          this.set('open', this.isOpenNow());
+          this.set('lastRefreshed', lastRefreshed);
           this.save();
         },
       });
