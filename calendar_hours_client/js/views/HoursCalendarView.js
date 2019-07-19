@@ -20,6 +20,7 @@
     initialize: function initialize() {
       this.model.requireDate(this.getDate());
       this.listenTo(this.model, 'change:hours', this.render);
+      this.render();
     },
 
     getDate: function getDate() {
@@ -96,10 +97,6 @@
 
     getHours: function getHours() {
       return this.model.getHours();
-    },
-
-    refresh: function refresh() {
-      this.model.refreshHours();
     }
   });
 })(jQuery, Backbone, Drupal);

@@ -25,10 +25,11 @@
       id: "",
       title: "",
       startDate: moment().format('Y-MM-DD'),
-      endDate: moment().format('Y-MM-DD'),
+      endDate: moment().add(1, 'days').format('Y-MM-DD'),
       reopensAt: "",
       closesAt: "",
       hours: {},
+      lastRefreshed: undefined,
     },
 
     urlRoot: drupalSettings.calendarHours.baseUrl,
@@ -102,8 +103,25 @@
     },
 
     refreshHours: function() {
-      this.fetch();
+      if (this.get("lastRefreshed") === undefined || moment(this.get("lastRefreshed")) <= moment().subtract(60, 'seconds')) {
+        this.fetchFromRemote();
+      } else {
+        this.fetch();
+      }
     },
+
+    fetchFromRemote: function() {
+      let lastRefreshed = moment().format();
+      $.get({
+        "url": this.url(),
+        "context": this,
+        "success": function(jsonResponse) {
+          this.set('hours', jsonResponse.hours);
+          this.set("lastRefreshed", lastRefreshed);
+          this.save();
+        },
+      });
+    }
 
   });
 })(jQuery, Backbone, Drupal, drupalSettings);

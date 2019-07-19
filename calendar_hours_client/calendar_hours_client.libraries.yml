@@ -8,11 +8,22 @@ momentjs:
   js:
     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js: { type: external, minified: true }
 
+backbone.localstorage:
+  remote: https://github.com/jeromegn/Backbone.localStorage
+  version: 2.24.0
+  license:
+    name: MIT
+    url: https://github.com/jeromegn/Backbone.localStorage/blob/master/LICENSE
+    gpl-compatible: true
+  js:
+    https://cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.1.16/backbone.localStorage-min.js:
+
 calendar-hours:
   version: 1.x
   js:
     js/calendar_hours.js: {}
     js/models/HoursCalendarModel.js: {}
+    js/collections/HoursCalendarCollection.js: {}
     js/views/HoursCalendarView.js: {}
     js/templates/HoursCalendarTemplate.js: {}
   dependencies:
@@ -22,3 +33,4 @@ calendar-hours:
     - core/jquery
     - core/jquery.once
     - calendar_hours_client/momentjs
+    - calendar_hours_client/backbone.localstorage
