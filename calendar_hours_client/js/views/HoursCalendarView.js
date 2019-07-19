@@ -3,7 +3,7 @@
  * A Backbone view for an HoursResponse.
  */
 
-(function ($, Backbone, Drupal) {
+(function ($, Backbone, Drupal, drupalSettings) {
 
   const DEFAULT_DATE_FORMAT = 'Y-MM-DD';
   const DEFAULT_TIME_FORMAT = 'hh:mm A';
@@ -24,6 +24,13 @@
       this.listenTo(this.model, 'change:reopensAt', this.render);
       this.listenTo(this.model, 'change:open', this.render);
       this.render();
+      let that = this;
+      setInterval(function() {
+        let secondsSinceMidnight = moment("00:00:00", "HH:mm:ss").diff(moment(), 'seconds');
+        if (secondsSinceMidnight <= 0 && secondsSinceMidnight > (drupalSettings.calendarHours.refreshInterval * -1 / 1000)) {
+          that.render();
+        }
+      }, drupalSettings.calendarHours.refreshInterval);
     },
 
     getDate: function getDate() {
@@ -102,4 +109,4 @@
       return this.model.getHours();
     }
   });
-})(jQuery, Backbone, Drupal);
+})(jQuery, Backbone, Drupal, drupalSettings);
