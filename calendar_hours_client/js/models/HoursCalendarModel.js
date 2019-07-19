@@ -104,7 +104,7 @@
     },
 
     refreshHours: function() {
-      if (this.get("lastRefreshed") === undefined || moment(this.get("lastRefreshed")) <= moment().subtract(900, 'seconds')) {
+      if (this.get("lastRefreshed") === undefined || moment(this.get("lastRefreshed")) <= moment().subtract(drupalSettings.calendarHours.maxAge, 'seconds')) {
         this.fetchFromRemote();
       } else {
         this.set('open', this.isOpenNow());

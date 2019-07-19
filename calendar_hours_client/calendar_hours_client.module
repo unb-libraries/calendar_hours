@@ -37,9 +37,15 @@ function calendar_hours_client_preprocess_html(&$variables) {
 
   $refresh_interval = \Drupal::config(CALENDAR_HOURS__SETTINGS_CLIENT)->get('refresh_interval');
   if (empty($refresh_interval)) {
-    $refresh_interval = 900000;
+    $refresh_interval = 60000;
   }
   $variables['#attached']['drupalSettings']['calendarHours']['refreshInterval'] = $refresh_interval;
+
+  $max_age = \Drupal::config(CALENDAR_HOURS__SETTINGS_CLIENT)->get('max_age');
+  if (empty($max_age)) {
+    $max_age = 900;
+  }
+  $variables['#attached']['drupalSettings']['calendarHours']['maxAge'] = $max_age;
 }
 
 /**
