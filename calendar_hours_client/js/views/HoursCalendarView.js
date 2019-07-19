@@ -20,6 +20,8 @@
     initialize: function initialize() {
       this.model.requireDate(this.getDate());
       this.listenTo(this.model, 'change:hours', this.render);
+      this.listenTo(this.model, 'change:closesAt', this.render);
+      this.listenTo(this.model, 'change:reopensAt', this.render);
       this.render();
     },
 

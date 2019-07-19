@@ -117,6 +117,8 @@
         "context": this,
         "success": function(jsonResponse) {
           this.set('hours', jsonResponse.hours);
+          this.set('closesAt', jsonResponse.closesAt);
+          this.set('reopensAt', jsonResponse.reopensAt);
           this.set("lastRefreshed", lastRefreshed);
           this.save();
         },
