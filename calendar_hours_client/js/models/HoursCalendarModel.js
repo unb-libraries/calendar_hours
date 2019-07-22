@@ -3,7 +3,7 @@
  * A Backbone Model for an HoursResponse.
  */
 
-(function ($, Backbone, Drupal, drupalSettings) {
+(function ($, Backbone) {
   /**
    * Backbone model for an HoursResponse.
    *
@@ -11,7 +11,7 @@
    *
    * @augments Backbone.Model
    */
-  Drupal.calendarHours.HoursCalendarModel = Backbone.Model.extend({
+  HoursCalendarModel = Backbone.Model.extend({
     /**
      * @type {object}
      *
@@ -33,10 +33,10 @@
       lastRefreshed: undefined,
     },
 
-    urlRoot: drupalSettings.calendarHours.baseUrl,
+    maxAge: 0,
 
     url: function() {
-      var url = this.urlRoot + this.get('id');
+      var url = this.collection.remoteUrl + this.get('id');
       var from = this.get('startDate');
       var to = this.get('endDate');
       return url + '?from=' + from + '&to=' + to + '&format=groupby:start-date';
@@ -103,8 +103,18 @@
       return this.get('closesAt');
     },
 
+    setAutoRefresh: function(refreshImmediately, interval) {
+      var that = this;
+      setInterval(function() {
+        that.refreshHours();
+      }, interval);
+      if (refreshImmediately) {
+        that.refreshHours();
+      }
+    },
+
     refreshHours: function() {
-      if (this.get("lastRefreshed") === undefined || moment(this.get("lastRefreshed")) <= moment().subtract(drupalSettings.calendarHours.maxAge, 'seconds')) {
+      if (this.get("lastRefreshed") === undefined || moment(this.get("lastRefreshed")) <= moment().subtract(this.maxAge, 'seconds')) {
         this.fetchFromRemote();
       } else {
         this.set('open', this.isOpenNow());
@@ -129,4 +139,4 @@
     }
 
   });
-})(jQuery, Backbone, Drupal, drupalSettings);
+})(jQuery, Backbone);

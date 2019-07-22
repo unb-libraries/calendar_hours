@@ -3,13 +3,13 @@
  * A Backbone view for an HoursResponse.
  */
 
-(function ($, Backbone, Drupal, drupalSettings) {
+(function ($, Backbone) {
 
   const DEFAULT_DATE_FORMAT = 'Y-MM-DD';
   const DEFAULT_TIME_FORMAT = 'hh:mm A';
   const DEFAULT_DISPLAY = 'static';
 
-  Drupal.calendarHours.HoursCalendarView = Backbone.View.extend({
+  HoursCalendarView = Backbone.View.extend({
     /**
      * Backbone view for an HoursResponse.
      *
@@ -17,6 +17,8 @@
      *
      * @augments Backbone.View
      */
+    refreshInterval: 60000,
+
     initialize: function initialize() {
       this.model.requireDate(this.getDate());
       this.listenTo(this.model, 'change:hours', this.render);
@@ -27,10 +29,10 @@
       let that = this;
       setInterval(function() {
         let secondsSinceMidnight = moment("00:00:00", "HH:mm:ss").diff(moment(), 'seconds');
-        if (secondsSinceMidnight <= 0 && secondsSinceMidnight > (drupalSettings.calendarHours.refreshInterval * -1 / 1000)) {
+        if (secondsSinceMidnight <= 0 && secondsSinceMidnight >= (that.refreshInterval * -1 / 1000)) {
           that.render();
         }
-      }, drupalSettings.calendarHours.refreshInterval);
+      }, this.refreshInterval);
     },
 
     getDate: function getDate() {
@@ -109,4 +111,4 @@
       return this.model.getHours();
     }
   });
-})(jQuery, Backbone, Drupal, drupalSettings);
+})(jQuery, Backbone);

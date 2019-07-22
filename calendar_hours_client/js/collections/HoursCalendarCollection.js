@@ -3,7 +3,7 @@
  * A Backbone Collection of HoursCalendars.
  */
 
-(function ($, Backbone, Drupal, drupalSettings) {
+(function ($, Backbone) {
   /**
    * Backbone collection of HoursCalendars.
    *
@@ -11,11 +11,13 @@
    *
    * @augments Backbone.Collection
    */
-  Drupal.calendarHours.HoursCalendarCollection = Backbone.Collection.extend({
+  HoursCalendarCollection = Backbone.Collection.extend({
 
-    model: Drupal.calendarHours.HoursCalendarModel,
+    model: HoursCalendarModel,
 
     localStorage: new Backbone.LocalStorage("hours-calendars"),
+
+    remoteUrl: window.location.protocol + "//" + window.location.host + "/api/hours/",
 
     has: function(id) {
       return this.get(id) !== undefined;
@@ -34,4 +36,4 @@
     }
 
   });
-})(jQuery, Backbone, Drupal, drupalSettings);
+})(jQuery, Backbone);

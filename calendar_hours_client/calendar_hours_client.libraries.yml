@@ -22,6 +22,7 @@ calendar-hours:
   version: 1.x
   js:
     js/calendar_hours.js: {}
+    js/calendar_hours.drupal.behavior.js: {}
     js/models/HoursCalendarModel.js: {}
     js/collections/HoursCalendarCollection.js: {}
     js/views/HoursCalendarView.js: {}

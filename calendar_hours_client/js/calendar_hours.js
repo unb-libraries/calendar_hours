@@ -1,45 +1,51 @@
-(function ($, Drupal, drupalSettings) {
-  Drupal.behaviors.calendarHours = {
-    attach: function attach(context, settings) {
+var calendarHours = {
+  collection: undefined,
+  models: {},
+  views: {},
+  context: undefined,
 
-      Drupal.calendarHours.collection = Drupal.calendarHours.collection || new Drupal.calendarHours.HoursCalendarCollection();
+  settings: {
+    baseUrl: window.location.protocol + "//" + window.location.host + "/api/hours/",
+    refreshInterval: 60000,
+    maxAgeUntilUpdateFromRemote: 900,
+  },
 
-      // initialize views
-      $(context).find('*[data-ch-id]').once('calendarHours').each(function(index, container) {
-          var calendarId = $(container).data('ch-id');
-
-          var model = undefined;
-          if (Drupal.calendarHours.collection.has(calendarId)) {
-            model = Drupal.calendarHours.collection.get({id: calendarId});
-          } else {
-            if (Drupal.calendarHours.collection.canRestore(calendarId)) {
-              model = Drupal.calendarHours.collection.restore(calendarId);
-            } else {
-              model = new Drupal.calendarHours.HoursCalendarModel({id: calendarId});
-              Drupal.calendarHours.collection.add(model);
-              model.save();
-            }
-          }
-
-          Drupal.calendarHours.views[index] = new Drupal.calendarHours.HoursCalendarView({
-            el: container,
-            model: model
-          });
+  initialize: function () {
+    this.collection = this.collection || new HoursCalendarCollection();
+    this.collection.remoteUrl = this.settings.baseUrl;
+    var that = this;
+    console.log(this.context);
+    jQuery(this.context).find('*[data-ch-id]').once('calendarHours').each(function(index, container) {
+      var calendarId = jQuery(container).data('ch-id');
+      that.models[calendarId] = that.models[calendarId] || that.loadOrCreateModel(calendarId);
+      that.models[calendarId].maxAge = that.settings.maxAgeUntilUpdateFromRemote;
+      that.views[index] = new HoursCalendarView({
+        el: container,
+        model: that.models[calendarId],
       });
+      that.views[index].refreshInterval = that.settings.refreshInterval;
+    });
+    jQuery.each(this.models, function(calendarId, model) {
+      model.setAutoRefresh(true, that.settings.maxAgeUntilUpdateFromRemote);
+    });
+  },
 
-      // refresh models
-      $.each(Drupal.calendarHours.collection.models, function(index, model) {
-        model.refreshHours();
-        setInterval(function() {
-          model.refreshHours();
-        }, drupalSettings.calendarHours.refreshInterval);
-      });
-
+  loadOrCreateModel: function (calendarId) {
+    var model = undefined;
+    if (this.collection.has(calendarId)) {
+      model = this.collection.get({id: calendarId});
+    } else {
+      if (this.collection.canRestore(calendarId)) {
+        model = this.collection.restore(calendarId);
+      } else {
+        model = new HoursCalendarModel({
+          id: calendarId,
+        });
+        this.collection.add(model);
+        model.save();
+      }
     }
-  };
+    return model;
+  },
 
-  Drupal.calendarHours = Drupal.calendarHours || {
-    views: {},
-  };
-
-})(jQuery, Drupal, drupalSettings);
+};
