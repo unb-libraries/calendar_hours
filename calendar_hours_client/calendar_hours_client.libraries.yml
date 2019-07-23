@@ -32,6 +32,5 @@ calendar-hours:
     - core/drupalSettings
     - core/backbone
     - core/jquery
-    - core/jquery.once
     - calendar_hours_client/momentjs
     - calendar_hours_client/backbone.localstorage

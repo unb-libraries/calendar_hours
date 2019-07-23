@@ -15,7 +15,7 @@ var calendarHours = {
     this.collection.remoteUrl = this.settings.baseUrl;
     var that = this;
     console.log(this.context);
-    jQuery(this.context).find('*[data-ch-id]').once('calendarHours').each(function(index, container) {
+    jQuery(this.context).find('*[data-ch-id]').each(function(index, container) {
       var calendarId = jQuery(container).data('ch-id');
       that.models[calendarId] = that.models[calendarId] || that.loadOrCreateModel(calendarId);
       that.models[calendarId].maxAge = that.settings.maxAgeUntilUpdateFromRemote;
