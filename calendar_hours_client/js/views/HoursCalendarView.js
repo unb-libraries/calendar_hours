@@ -28,6 +28,7 @@
       this.render();
       let that = this;
       setInterval(function() {
+        that.model.requireDate(that.getDate());
         let secondsSinceMidnight = moment("00:00:00", "HH:mm:ss").diff(moment(), 'seconds');
         if (secondsSinceMidnight <= 0 && secondsSinceMidnight >= (that.refreshInterval * -1 / 1000)) {
           that.render();

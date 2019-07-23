@@ -51,6 +51,11 @@
       if (date > endDate) {
         this.set('endDate', date);
       }
+      var today = moment().format('Y-MM-DD');
+      if (date === today) {
+        var tomorrow = moment().add(1, 'days').format('Y-MM-DD');
+        this.requireDate(tomorrow);
+      }
     },
 
     getHours: function() {
