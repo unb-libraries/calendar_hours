@@ -23,4 +23,20 @@ function calendar_hours_server_help($route_name, RouteMatchInterface $route_matc
   }
 }
 
+/**
+ * Implements hook_cron().
+ */
+function calendar_hours_server_cron() {
+  /** @var \Drupal\calendar_hours_server\Entity\HoursCalendarStorage $calendarStorage */
+  $calendarStorage = \Drupal::service('entity_type.manager')->getStorage('hours_calendar');
+  $tagsToInvalidate = [];
+  foreach ($calendarStorage->loadMultiple() as $calendar) {
+    $tagsToInvalidate[] = 'calendar_hours.' . $calendar->id;
+  }
+
+  /** @var \Drupal\Core\Cache\CacheTagsInvalidator $invalidator */
+  $invalidator = \Drupal::service('cache_tags.invalidator');
+  $invalidator->invalidateTags($tagsToInvalidate);
+}
+
 

@@ -6,6 +6,7 @@ use Drupal\calendar_hours_server\Entity\HoursCalendar;
 use Drupal\calendar_hours_server\Entity\HoursCalendarStorage;
 use Drupal\calendar_hours_server\Plugin\FormatterPluginManager;
 use Drupal\calendar_hours_server\Response\HoursResponse;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\rest\Plugin\ResourceBase;
@@ -121,13 +122,15 @@ class CalendarResource extends ResourceBase {
       $params['format'],
       $status
     );
-    $response->addCacheableDependency([
-      '#cache' => [
-        // Cache for 15 minutes.
-        'max-age' => 900,
-      ],
-    ]);
+
     $response->setMaxAge(900);
+    $response->addCacheableDependency(CacheableMetadata::createFromRenderArray([
+      '#cache' => [
+        'tags' => [
+          'calendar_hours.' . $calendar_id,
+        ]
+      ],
+    ]));
 
     return $response;
   }
