@@ -18,7 +18,7 @@ HoursCalendarTemplate = _.template(
         "</li>" +
       "<% } else if (display.today === 'live-co' && status === 'open') { %>" +
         "<li>" +
-          "Closes <%= closesNext %>. Reopens <%= opensNext %>." +
+          "Closes <%= closesNext %>. Opens <%= opensNext %>." +
         "</li>" +
       "<% } else { %>" +
         "<% if (hours.length > 0) { %>" +
