@@ -31,7 +31,7 @@ function calendar_hours_server_cron() {
   $calendarStorage = \Drupal::service('entity_type.manager')->getStorage('hours_calendar');
   $tagsToInvalidate = [];
   foreach ($calendarStorage->loadMultiple() as $calendar) {
-    $tagsToInvalidate[] = 'calendar_hours.' . $calendar->id;
+    $tagsToInvalidate[] = 'calendar_hours_' . $calendar->id;
   }
 
   /** @var \Drupal\Core\Cache\CacheTagsInvalidator $invalidator */

@@ -126,8 +126,11 @@ class CalendarResource extends ResourceBase {
     $response->setMaxAge(900);
     $response->addCacheableDependency(CacheableMetadata::createFromRenderArray([
       '#cache' => [
+        'contexts' => [
+          'url.query_args'
+        ],
         'tags' => [
-          'calendar_hours.' . $calendar_id,
+          'calendar_hours_' . $calendar_id,
         ]
       ],
     ]));
