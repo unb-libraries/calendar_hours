@@ -25,6 +25,7 @@
       this.listenTo(this.model, 'change:closesAt', this.render);
       this.listenTo(this.model, 'change:reopensAt', this.render);
       this.listenTo(this.model, 'change:open', this.render);
+      this.listenTo(this.model, 'change:lastRefreshed', this.render);
       this.render();
       let that = this;
       setInterval(function() {
