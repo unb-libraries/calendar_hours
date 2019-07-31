@@ -85,11 +85,11 @@ class GoogleCalendarApi extends CalendarApiBase {
     foreach ($events as $event) {
       $start = new DrupalDateTime($event->start->dateTime, $timezone);
       if ($start > $from) {
-        $opensAt = $start;
+        return $start;
       }
     }
 
-    return isset($opensAt) ? $opensAt : NULL;
+    return NULL;
   }
 
   /**
@@ -112,11 +112,11 @@ class GoogleCalendarApi extends CalendarApiBase {
       $start = new DrupalDateTime($event->start->dateTime, $timezone);
       $end = new DrupalDateTime($event->end->dateTime, $timezone);
       if ($start < $from && $end > $from) {
-        $closesAt = $end;
+        return $end;
       }
     }
 
-    return isset($closesAt) ? $closesAt : NULL;
+    return NULL;
   }
 
 }
