@@ -99,14 +99,17 @@
         });
       });
 
-      this.$el.html(HoursCalendarTemplate({
+      var params = {
+        wrapper: this.$el.get(0).nodeName.toLowerCase(),
         display: displayOptions,
         date: moment(date).format(displayOptions.dateFormat),
         status: this.model.isOpenNow() ? 'open' : 'closed',
         opensNext: moment(this.model.getReopensAt()).format(displayOptions.liveDateFormat.opensNextFormat),
         closesNext: moment(this.model.getClosesAt()).format(displayOptions.liveDateFormat.closesNextFormat),
         hours: hours,
-      }));
+      };
+
+      this.$el.html(HoursCalendarTemplate(params));
     },
 
     getHours: function getHours() {
