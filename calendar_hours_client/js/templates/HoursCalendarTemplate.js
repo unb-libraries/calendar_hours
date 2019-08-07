@@ -10,37 +10,40 @@ HoursCalendarTemplate = _.template(
   "<% if (wrapper === 'tr') { %>" +
     "<td>" +
   "<% } %>" +
-  "<ul>" +
+
     "<% if (display.today === 'live') { %>" +
-      "<li>" +
+      "<span>" +
         "<% if (status === 'open') { %>" +
           "Closes <%= closesNext %>." +
         "<% } else { %>" +
           "Opens <%= opensNext %>." +
         "<% } %>" +
-      "</li>" +
+      "</span>" +
     "<% } else if (display.today === 'live-c' && status === 'open') { %>" +
-      "<li>" +
+      "<span>" +
           "Closes <%= closesNext %>." +
-      "</li>" +
+      "</span>" +
     "<% } else if (display.today === 'live-co' && status === 'open') { %>" +
-      "<li>" +
+      "<span>" +
         "Closes <%= closesNext %>. Opens <%= opensNext %>." +
-      "</li>" +
+      "</span>" +
     "<% } else { %>" +
-      "<% if (hours.length > 0) { %>" +
-        "<% _.forEach(hours, function(block) { %>" +
-          "<li>" +
-            "<%= block.from %> - <%= block.to %>" +
-          "</li>" +
-        "<% }) %>" +
+      "<% if (hours.length > 1) { %>" +
+        "<ul>" +
+          "<% _.forEach(hours, function(block) { %>" +
+            "<li>" +
+              "<%= block.from %> - <%= block.to %>" +
+            "</li>" +
+          "<% }) %>" +
+        "</ul>" +
+      "<% } else if (hours.length > 0) { %>" +
+        "<span><%= hours[0].from %> - <%= hours[0].to %></span>" +
       "<% } else { %>" +
-        "<li>" +
+        "<span>" +
           "Closed" +
-        "</li>" +
+        "</span>" +
       "<% } %>" +
     "<% } %>" +
-  "</ul>" +
   "<% if (wrapper === 'tr') { %>" +
     "</td>" +
   "<% } %>"
