@@ -1,2 +1,6 @@
 administer hours calendars:
   title: 'Administer Hours Calendars'
+
+administer hours calendar alerts:
+  title: 'Administer HoursCalendar Alerts'
+  description: 'Allow to view, edit, and create HoursCalendar alerts.'

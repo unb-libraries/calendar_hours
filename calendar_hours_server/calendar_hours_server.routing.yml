@@ -29,3 +29,35 @@ entity.hours_calendar.disable:
     _title: 'Disable Hours Calendar'
   requirements:
     _permission: 'administer hours calendars'
+
+entity.hours_calendar_alert.collection:
+  path: '/admin/config/services/hours/alerts'
+  defaults:
+    _entity_list: 'hours_calendar_alert'
+    _title: 'Calendar Hours: Alerts'
+  requirements:
+    _permission: 'administer hours calendar alerts'
+
+entity.hours_calendar_alert.add:
+  path: '/admin/config/services/hours/alerts/create'
+  defaults:
+    _entity_form: 'hours_calendar_alert.add'
+    _title: 'Calendar Hours: Create Alert'
+  requirements:
+    _permission: 'administer hours calendar alerts'
+
+entity.hours_calendar_alert.edit:
+  path: '/admin/config/services/hours/alerts/{alert}/edit'
+  defaults:
+    _entity_form: 'hours_calendar_alert.edit'
+    _title: 'Calendar Hours: Edit Alert'
+  requirements:
+    _permission: 'administer hours calendar alerts'
+
+entity.hours_calendar_alert.delete:
+  path: '/admin/config/services/hours/alerts/delete'
+  defaults:
+    _entity_form: 'hours_calendar_alert.delete'
+    _title: 'Calendar Hours: Delete Alert'
+  requirements:
+    _permission: 'administer hours calendar alerts'
