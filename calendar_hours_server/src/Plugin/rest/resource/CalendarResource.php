@@ -112,12 +112,24 @@ class CalendarResource extends ResourceBase {
       $status = 500;
     }
 
+    $alert_entities = $calendar->getAlerts();
+    $alerts = [];
+    foreach ($alert_entities as $alert) {
+      $alerts[] = [
+        'from' => $alert->getVisibility()['from']->format('Y-m-d h:i'),
+        'to' => $alert->getVisibility()['to']->format('Y-m-d h:i'),
+        'title' => $alert->getTitle(),
+        'message' => $alert->getMessage(),
+      ];
+    }
+
     $response = new HoursResponse(
       $calendar,
       [
         'blocks' => $hours,
         'opensAt' => isset($opensNext) ? $opensNext->format('c') : '',
         'closesAt' => isset($closesNext) ? $closesNext->format('c') : '',
+        'alerts' => $alerts,
       ],
       $params['format'],
       $status
