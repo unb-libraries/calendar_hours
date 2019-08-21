@@ -57,7 +57,6 @@ final class HoursResponse extends ResourceResponse implements \Iterator {
       'hours' => $this->toArray(),
       'reopensAt' => $hours['opensAt'],
       'closesAt' => $hours['closesAt'],
-      'alerts' => $hours['alerts']
     ], $status, $headers);
 
 

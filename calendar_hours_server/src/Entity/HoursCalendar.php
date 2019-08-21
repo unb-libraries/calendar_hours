@@ -152,26 +152,6 @@ class HoursCalendar extends ConfigEntityBase {
   }
 
   /**
-   * Retrieve any alerts affecting the unit represented by this calendar.
-   *
-   * @return Alert[]
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  public function getAlerts() {
-    $alert_ids = \Drupal::entityQuery('hours_calendar_alert', 'OR')
-      ->condition('calendar', $this->id)
-      ->notExists('calendar')
-      ->execute();
-
-    /** @var Alert[] $alerts */
-    $alerts = $this->entityTypeManager()->getStorage('hours_calendar_alert')->loadMultiple(array_keys($alert_ids));
-
-    return $alerts;
-  }
-
-  /**
    * Retrieve the next time the unit represented by this calendar opens or, if already open, reopens.
    *
    * @return \Drupal\Core\Datetime\DrupalDateTime

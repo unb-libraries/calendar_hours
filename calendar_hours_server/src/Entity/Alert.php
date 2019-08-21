@@ -33,7 +33,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *       "html" = "\Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
  *     },
  *   },
- *   base_table = "hours_calendar_alert",
+ *   base_table = "alert",
  *   data_table = "alert_field_data",
  *   translatable = TRUE,
  *   admin_permission = "administer alert entities",
@@ -54,14 +54,6 @@ use Drupal\Core\Entity\EntityTypeInterface;
 class Alert extends ContentEntityBase {
 
   use EntityChangedTrait;
-
-  public function getTitle() {
-    return $this->get('title')->value;
-  }
-
-  public function getMessage() {
-    return $this->get('body')->value;
-  }
 
   public function getCalendar() {
     return $this->get('calendar')->entity;

@@ -47,7 +47,7 @@ entity.hours_calendar_alert.add:
     _permission: 'administer hours calendar alerts'
 
 entity.hours_calendar_alert.edit:
-  path: '/admin/config/services/hours/alerts/{hours_calendar_alert}/edit'
+  path: '/admin/config/services/hours/alerts/{alert}/edit'
   defaults:
     _entity_form: 'hours_calendar_alert.edit'
     _title: 'Calendar Hours: Edit Alert'
@@ -55,7 +55,7 @@ entity.hours_calendar_alert.edit:
     _permission: 'administer hours calendar alerts'
 
 entity.hours_calendar_alert.delete:
-  path: '/admin/config/services/hours/alerts/{hours_calendar_alert}/delete'
+  path: '/admin/config/services/hours/alerts/delete'
   defaults:
     _entity_form: 'hours_calendar_alert.delete'
     _title: 'Calendar Hours: Delete Alert'
