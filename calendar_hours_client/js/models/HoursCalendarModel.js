@@ -119,12 +119,19 @@
     },
 
     refreshHours: function() {
-      if (this.get("lastRefreshed") === undefined || moment(this.get("lastRefreshed")) <= moment().subtract(this.maxAge, 'seconds')) {
+      if (this.shallRefreshFromRemote()) {
         this.fetchFromRemote();
       } else {
         this.set('open', this.isOpenNow());
         this.save();
       }
+    },
+
+    shallRefreshFromRemote: function() {
+      return this.get("lastRefreshed") === undefined
+          || moment(this.get("lastRefreshed")) <= moment().subtract(this.maxAge, 'seconds')
+          || this.get('hours')[this.get('startDate')] === undefined
+          || this.get('hours')[this.get('endDate')] === undefined;
     },
 
     fetchFromRemote: function() {
