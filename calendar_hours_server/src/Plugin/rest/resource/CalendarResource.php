@@ -112,15 +112,12 @@ class CalendarResource extends ResourceBase {
       $status = 500;
     }
 
-    $alert_entities = $calendar->getAlerts([
-      'from' => (new DrupalDateTime($params['from'], \Drupal::currentUser()->getTimeZone()))->setTime(0, 0, 0)->format('c'),
-      'to' => (new DrupalDateTime($params['to'], \Drupal::currentUser()->getTimeZone()))->setTime(23, 59, 59)->format('c'),
-    ]);
+    $alert_entities = $calendar->getAlerts();
     $alerts = [];
     foreach ($alert_entities as $alert) {
       $alerts[] = [
-        'from' => $alert->getVisibility()['from']->format('c'),
-        'to' => $alert->getVisibility()['to']->format('c'),
+        'from' => $alert->getVisibility()['from']->format('Y-m-d h:i'),
+        'to' => $alert->getVisibility()['to']->format('Y-m-d h:i'),
         'title' => $alert->getTitle(),
         'message' => $alert->getMessage(),
       ];

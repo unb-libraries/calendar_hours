@@ -154,46 +154,15 @@ class HoursCalendar extends ConfigEntityBase {
   /**
    * Retrieve any alerts affecting the unit represented by this calendar.
    *
-   * @param array $options
-   *   Accepted keys are:
-   *     - from: timestamp; lower boundary to search for alerts
-   *     - to: timestamp; upper boundary to search for alerts
-   *
    * @return Alert[]
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function getAlerts($options = []) {
-    $alert_query = \Drupal::entityQuery('hours_calendar_alert');
-    $base_condition = $alert_query->orConditionGroup()
+  public function getAlerts() {
+    $alert_ids = \Drupal::entityQuery('hours_calendar_alert', 'OR')
       ->condition('calendar', $this->id)
-      ->notExists('calendar');
-
-    $timezone = \Drupal::currentUser()->getTimeZone();
-    if (!array_key_exists('from', $options)) {
-      $beginning_of_today = new DrupalDateTime('now', $timezone);
-      $beginning_of_today->setTime(0, 0, 0);
-      $options['from'] = $beginning_of_today->format('c');
-    }
-
-    if (!array_key_exists('to', $options)) {
-      $end_of_today = new DrupalDateTime('now', $timezone);
-      $end_of_today->setTime(23, 59, 59);
-      $options['to'] = $end_of_today->format('c');
-    }
-
-    $optional_conditions = $alert_query->orConditionGroup()
-      ->condition('visible_interval__value', [$options['from'], $options['to']], 'BETWEEN')
-      ->condition('visible_interval__end_value', [$options['from'], $options['to']], 'BETWEEN')
-      ->condition($alert_query->andConditionGroup()
-        ->condition('visible_interval__value', $options['from'], '<=')
-        ->condition('visible_interval__end_value', $options['to'], '>=')
-      );
-
-    $alert_ids = $alert_query
-      ->condition($base_condition)
-      ->condition($optional_conditions)
+      ->notExists('calendar')
       ->execute();
 
     /** @var Alert[] $alerts */
