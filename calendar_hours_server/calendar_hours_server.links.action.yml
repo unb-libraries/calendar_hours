@@ -1,5 +1,0 @@
-entity.alert.add_form:
-  route_name: entity.hours_calendar_alert.add_form
-  title: 'Create Alert'
-  appears_on:
-    - entity.hours_calendar_alert.collection

@@ -2,9 +2,3 @@ calendar_hours.settings.calendar_list:
   route_name: entity.hours_calendar.collection
   title: 'Calendars'
   base_route: entity.hours_calendar.collection
-
-entity.hours_calendar_alert.collection:
-  route_name: entity.hours_calendar_alert.collection
-  base_route: entity.hours_calendar.collection
-  title: 'Alerts'
-
