@@ -25,7 +25,7 @@ var calendarHours = {
       that.views[index].refreshInterval = that.settings.refreshInterval;
     });
     jQuery.each(this.models, function(calendarId, model) {
-      model.setAutoRefresh(true, that.settings.maxAgeUntilUpdateFromRemote);
+      model.setAutoRefresh(true, that.settings.maxAgeUntilUpdateFromRemote * 1000);
     });
   },
 
