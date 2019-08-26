@@ -17,15 +17,11 @@ var calendarHours = {
     jQuery(this.context).find('*[data-ch-id]').each(function(index, container) {
       var calendarId = jQuery(container).data('ch-id');
       that.models[calendarId] = that.models[calendarId] || that.loadOrCreateModel(calendarId);
-      that.models[calendarId].maxAge = that.settings.maxAgeUntilUpdateFromRemote;
       that.views[index] = new HoursCalendarView({
         el: container,
         model: that.models[calendarId],
       });
       that.views[index].refreshInterval = that.settings.refreshInterval;
-    });
-    jQuery.each(this.models, function(calendarId, model) {
-      model.setAutoRefresh(true, that.settings.maxAgeUntilUpdateFromRemote * 1000);
     });
   },
 
@@ -43,6 +39,8 @@ var calendarHours = {
         this.collection.add(model);
         model.save();
       }
+      model.maxAge = this.settings.maxAgeUntilUpdateFromRemote;
+      model.setAutoRefresh(true, this.settings.refreshInterval);
     }
     return model;
   },
