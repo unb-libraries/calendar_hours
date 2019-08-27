@@ -34,6 +34,7 @@
     },
 
     maxAge: 0,
+    autoRefresh: undefined,
 
     url: function() {
       var url = this.collection.remoteUrl + this.get('id');
@@ -108,13 +109,12 @@
       return this.get('closesAt');
     },
 
-    setAutoRefresh: function(refreshImmediately, interval) {
-      var that = this;
-      setInterval(function() {
-        that.refreshHours();
-      }, interval);
-      if (refreshImmediately) {
-        that.refreshHours();
+    setAutoRefresh: function(interval) {
+      if (!this.autoRefresh) {
+        var that = this;
+        this.autoRefresh = setInterval(function() {
+          that.refreshHours();
+        }, interval);
       }
     },
 
@@ -129,9 +129,9 @@
 
     shallRefreshFromRemote: function() {
       return this.get("lastRefreshed") === undefined
-          || moment(this.get("lastRefreshed")) <= moment().subtract(this.maxAge, 'seconds')
-          || this.get('hours')[this.get('startDate')] === undefined
-          || this.get('hours')[this.get('endDate')] === undefined;
+        || moment(this.get("lastRefreshed")) <= moment().subtract(this.maxAge, 'seconds')
+        || this.get('hours')[this.get('startDate')] === undefined
+        || this.get('hours')[this.get('endDate')] === undefined;
     },
 
     fetchFromRemote: function() {

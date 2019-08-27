@@ -23,6 +23,11 @@ var calendarHours = {
       });
       that.views[index].refreshInterval = that.settings.refreshInterval;
     });
+
+    jQuery.each(this.models,function (index, model) {
+      model.refreshHours();
+    });
+
   },
 
   loadOrCreateModel: function (calendarId) {
@@ -40,8 +45,8 @@ var calendarHours = {
         model.save();
       }
       model.maxAge = this.settings.maxAgeUntilUpdateFromRemote;
-      model.setAutoRefresh(true, this.settings.refreshInterval);
     }
+    model.setAutoRefresh(this.settings.refreshInterval);
     return model;
   },
 
