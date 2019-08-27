@@ -140,7 +140,8 @@
         "url": this.url(),
         "context": this,
         "success": function(jsonResponse) {
-          this.set('hours', this.mergeHours(jsonResponse.hours));
+          var hours = this.mergeHours(jsonResponse.hours);
+          this.set('hours', hours);
           this.set('closesAt', jsonResponse.closesAt);
           this.set('reopensAt', jsonResponse.reopensAt);
           this.set('open', this.isOpenNow());
@@ -151,9 +152,9 @@
     },
 
     mergeHours: function(newHours) {
-      var mergedHours = this.get('hours');
-      var date = moment(this.get('startDate'));
-      var endDate = moment(this.get('endDate'));
+      var mergedHours = {};
+      var date = moment(this.get('startDate')).set({'hour': 0, 'minute': 0, 'second': 0});
+      var endDate = moment(this.get('endDate')).set({'hour': 0, 'minute': 0, 'second': 0});
       while (endDate.diff(date, 'days') >= 0) {
         var formattedDate = date.format('Y-MM-DD');
         if (newHours[formattedDate] !== undefined) {
@@ -164,6 +165,20 @@
         date = date.add(1, 'days');
       }
       return mergedHours;
+    },
+
+    removePastDates: function() {
+      var today = moment().set({'hour': 0, 'minute': 0, 'second': 0});
+      var hours = this.get('hours');
+      jQuery.each(hours, function(formattedDate, blocks) {
+        var date = moment(formattedDate).set({'hour': 0, 'minute': 0, 'second': 0});
+        if (date.diff(today, 'days') < 0) {
+          delete hours[formattedDate];
+        }
+      });
+      this.set('startDate', today.format('Y-MM-DD'));
+      this.set('hours', hours);
+      this.save();
     }
 
   });

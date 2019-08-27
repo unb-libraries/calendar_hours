@@ -28,12 +28,15 @@
       return attrs !== null;
     },
 
-    restore: function(calendarId) {
+    restore: function(calendarId, options = {'restorePastDates': false}) {
       var attrs = this.localStorage.find({id: calendarId});
-      var model = new this.model(attrs);
-      this.add(model);
-      return this.get(calendarId);
-    }
+      this.add(new this.model(attrs));
+      var model = this.get(calendarId);
+      if (options.restorePastDates === false) {
+        model.removePastDates();
+      }
+      return model;
+    },
 
   });
 })(jQuery, Backbone);
