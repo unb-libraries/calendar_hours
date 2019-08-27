@@ -24,6 +24,18 @@ var calendarHours = {
       that.views[index].refreshInterval = that.settings.refreshInterval;
     });
 
+    // date only containers, for multi-column tables
+    jQuery(this.context).find('.ch-date-only').each(function(index, container) {
+      var date = jQuery(container).data('ch-date');
+      if (date === undefined) {
+        var daysFromToday = jQuery(container).data('ch-days') || 0;
+        date = moment().add(daysFromToday, 'days').format('Y-MM-DD');
+      }
+      var dateFormat = jQuery(container).data('ch-format-date');
+      console.log(container);
+      jQuery(container).html(moment(date).format(dateFormat));
+    });
+
     jQuery.each(this.models,function (index, model) {
       model.refreshHours();
     });
