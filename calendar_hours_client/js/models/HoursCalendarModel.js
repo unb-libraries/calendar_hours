@@ -140,7 +140,7 @@
         "url": this.url(),
         "context": this,
         "success": function(jsonResponse) {
-          this.set('hours', jsonResponse.hours);
+          this.set('hours', this.mergeHours(jsonResponse.hours));
           this.set('closesAt', jsonResponse.closesAt);
           this.set('reopensAt', jsonResponse.reopensAt);
           this.set('open', this.isOpenNow());
@@ -148,6 +148,22 @@
           this.save();
         },
       });
+    },
+
+    mergeHours: function(newHours) {
+      var mergedHours = this.get('hours');
+      var date = moment(this.get('startDate'));
+      var endDate = moment(this.get('endDate'));
+      while (endDate.diff(date, 'days') >= 0) {
+        var formattedDate = date.format('Y-MM-DD');
+        if (newHours[formattedDate] !== undefined) {
+          mergedHours[formattedDate] = newHours[formattedDate];
+        } else {
+          mergedHours[formattedDate] = [];
+        }
+        date = date.add(1, 'days');
+      }
+      return mergedHours;
     }
 
   });
