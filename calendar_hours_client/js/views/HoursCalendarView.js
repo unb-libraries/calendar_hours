@@ -91,7 +91,15 @@
     render: function render() {
       var date = this.getDate();
       var displayOptions = this.getDisplayOptions();
+
       var hours = [];
+      if (displayOptions.today.substr(0, 4) === 'live' && this.model.isOpenSinceBeforeMidnight()) {
+        var currentBlock = this.model.currentBlock();
+        hours.push({
+          from: moment(currentBlock.from).format(displayOptions.timeFormat),
+          to: moment(currentBlock.to).format(displayOptions.timeFormat)
+        });
+      }
       $.each(this.getHours()[date], function(index, block) {
         hours.push({
           from: moment(block.from).format(displayOptions.timeFormat),

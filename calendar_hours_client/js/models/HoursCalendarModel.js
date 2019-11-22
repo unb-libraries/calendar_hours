@@ -24,7 +24,7 @@
     defaults: {
       id: "",
       title: "",
-      startDate: moment().format('Y-MM-DD'),
+      startDate: moment().subtract(1, 'days').format('Y-MM-DD'),
       endDate: moment().add(1, 'days').format('Y-MM-DD'),
       reopensAt: "",
       closesAt: "",
@@ -172,7 +172,7 @@
       var hours = this.get('hours');
       jQuery.each(hours, function(formattedDate, blocks) {
         var date = moment(formattedDate).set({'hour': 0, 'minute': 0, 'second': 0});
-        if (date.diff(today, 'days') < 0) {
+        if (date.diff(today, 'days') < -1) {
           delete hours[formattedDate];
         }
       });

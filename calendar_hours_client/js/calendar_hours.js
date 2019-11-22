@@ -32,7 +32,6 @@ var calendarHours = {
         date = moment().add(daysFromToday, 'days').format('Y-MM-DD');
       }
       var dateFormat = jQuery(container).data('ch-format-date');
-      console.log(container);
       jQuery(container).html(moment(date).format(dateFormat));
     });
 
