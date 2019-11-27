@@ -176,7 +176,7 @@
           delete hours[formattedDate];
         }
       });
-      this.set('startDate', today.format('Y-MM-DD'));
+      this.set('startDate', today.subtract(1, 'days').format('Y-MM-DD'));
       this.set('hours', hours);
       this.save();
     }
