@@ -27,6 +27,7 @@ calendar-hours:
     js/collections/HoursCalendarCollection.js: {}
     js/views/HoursCalendarView.js: {}
     js/templates/HoursCalendarTemplate.js: {}
+    js/templates/HoursCalendarUnavailableTemplate.js: {}
   dependencies:
     - core/drupal
     - core/drupalSettings

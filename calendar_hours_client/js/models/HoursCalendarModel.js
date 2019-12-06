@@ -157,11 +157,7 @@
       var endDate = moment(this.get('endDate')).set({'hour': 0, 'minute': 0, 'second': 0});
       while (endDate.diff(date, 'days') >= 0) {
         var formattedDate = date.format('Y-MM-DD');
-        if (newHours[formattedDate] !== undefined) {
-          mergedHours[formattedDate] = newHours[formattedDate];
-        } else {
-          mergedHours[formattedDate] = [];
-        }
+        mergedHours[formattedDate] = newHours[formattedDate];
         date = date.add(1, 'days');
       }
       return mergedHours;

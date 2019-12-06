@@ -91,33 +91,45 @@
     render: function render() {
       var date = this.getDate();
       var displayOptions = this.getDisplayOptions();
+      var hours = this.getHours();
 
-      var hours = [];
-      if (displayOptions.today.substr(0, 4) === 'live' && this.model.isOpenSinceBeforeMidnight()) {
-        var currentBlock = this.model.currentBlock();
-        hours.push({
-          from: moment(currentBlock.from).format(displayOptions.timeFormat),
-          to: moment(currentBlock.to).format(displayOptions.timeFormat)
+      if (hours[date] !== undefined) {
+        var blocks = [];
+        if (displayOptions.today.substr(0, 4) === 'live' && this.model.isOpenSinceBeforeMidnight()) {
+          var currentBlock = this.model.currentBlock();
+          blocks.push({
+            from: moment(currentBlock.from).format(displayOptions.timeFormat),
+            to: moment(currentBlock.to).format(displayOptions.timeFormat)
+          });
+        }
+        $.each(hours[date], function(index, block) {
+          blocks.push({
+            from: moment(block.from).format(displayOptions.timeFormat),
+            to: moment(block.to).format(displayOptions.timeFormat)
+          });
         });
+
+        var params = {
+          wrapper: this.$el.get(0).nodeName.toLowerCase(),
+          display: displayOptions,
+          date: moment(date).format(displayOptions.dateFormat),
+          status: this.model.isOpenNow() ? 'open' : 'closed',
+          opensNext: moment(this.model.getReopensAt()).format(displayOptions.liveDateFormat.opensNextFormat),
+          closesNext: moment(this.model.getClosesAt()).format(displayOptions.liveDateFormat.closesNextFormat),
+          hours: blocks,
+        };
+
+        this.$el.html(HoursCalendarTemplate(params));
       }
-      $.each(this.getHours()[date], function(index, block) {
-        hours.push({
-          from: moment(block.from).format(displayOptions.timeFormat),
-          to: moment(block.to).format(displayOptions.timeFormat)
-        });
-      });
+      else {
+        var params = {
+          wrapper: this.$el.get(0).nodeName.toLowerCase(),
+          display: displayOptions,
+          date: moment(date).format(displayOptions.dateFormat),
+        };
+        this.$el.html(HoursCalendarUnavailableTemplate(params));
+      }
 
-      var params = {
-        wrapper: this.$el.get(0).nodeName.toLowerCase(),
-        display: displayOptions,
-        date: moment(date).format(displayOptions.dateFormat),
-        status: this.model.isOpenNow() ? 'open' : 'closed',
-        opensNext: moment(this.model.getReopensAt()).format(displayOptions.liveDateFormat.opensNextFormat),
-        closesNext: moment(this.model.getClosesAt()).format(displayOptions.liveDateFormat.closesNextFormat),
-        hours: hours,
-      };
-
-      this.$el.html(HoursCalendarTemplate(params));
     },
 
     getHours: function getHours() {
