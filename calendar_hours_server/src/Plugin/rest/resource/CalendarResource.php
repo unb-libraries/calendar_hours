@@ -37,11 +37,6 @@ class CalendarResource extends ResourceBase {
 
 
   /**
-   * @var \Drupal\calendar_hours_server\Plugin\FormatterPluginManager
-   */
-  protected $formatManager;
-
-  /**
    * GoogleCalendarApiController constructor.
    *
    * @param \Drupal\calendar_hours_server\Entity\HoursCalendarStorage $hours_calendar_storage
@@ -57,9 +52,8 @@ class CalendarResource extends ResourceBase {
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    */
-  public function __construct(HoursCalendarStorage $hours_calendar_storage, FormatterPluginManager $format_manager, array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger) {
+  public function __construct(HoursCalendarStorage $hours_calendar_storage, array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger) {
     $this->calendarStorage = $hours_calendar_storage;
-    $this->formatManager = $format_manager;
     parent::__construct(
       $configuration,
       $plugin_id,
@@ -75,7 +69,6 @@ class CalendarResource extends ResourceBase {
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $container->get('entity_type.manager')->getStorage('hours_calendar'),
-      $container->get('plugin.manager.calendar_hours.formatter'),
       $configuration,
       $plugin_id,
       $plugin_definition,
@@ -158,15 +151,6 @@ class CalendarResource extends ResourceBase {
     return $params;
   }
 
-  protected function format($sub_query, $default_value = []) {
-    $format_params = $default_value;
-    foreach (explode(',', $sub_query) as $key_value_string) {
-      $key_value_pair = explode(':', $key_value_string);
-      $format_params[$key_value_pair[0]] = $key_value_pair[1];
-    }
-    return $format_params;
-  }
-
   /**
    * Default request parameters.
    */
@@ -174,7 +158,6 @@ class CalendarResource extends ResourceBase {
     return [
       'from' => (new DrupalDateTime())->format('Y-m-d'),
       'to' => (new DrupalDateTime())->format('Y-m-d'),
-      'format' => [],
     ];
   }
 

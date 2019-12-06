@@ -40,7 +40,7 @@
       var url = this.collection.remoteUrl + this.get('id');
       var from = this.get('startDate');
       var to = this.get('endDate');
-      return url + '?from=' + from + '&to=' + to + '&format=groupby:start-date';
+      return url + '?from=' + from + '&to=' + to;
     },
 
     requireDate: function(date) {
