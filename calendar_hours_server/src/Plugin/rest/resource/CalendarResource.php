@@ -106,8 +106,17 @@ class CalendarResource extends ResourceBase {
         ];
       }
 
-      $start_date = !empty($blocks) ? $blocks[0]->from->format('Y-m-d') : '';
-      $end_date = !empty($blocks) ? $blocks[count($blocks) - 1]->from->format('Y-m-d') : '';
+      $date = DrupalDateTime::createFromFormat('Y-m-d', $params['from']);
+      while (($formatted_date = $date->format('Y-m-d')) !== $params['to']) {
+        if (!array_key_exists($formatted_date, $hours)) {
+          $hours[$formatted_date] = [];
+        }
+        $date->add(\DateInterval::createFromDateString('1 day'));
+      }
+
+      if (!array_key_exists($params['to'], $hours)) {
+        $hours[$params['to']] = [];
+      }
 
       $opens_at = $calendar->getOpensAt();
       $closes_at = $calendar->getClosesAt();
@@ -115,8 +124,8 @@ class CalendarResource extends ResourceBase {
       $response = new ResourceResponse([
         'id' => $calendar->id,
         'title' => $calendar->title,
-        'startDate' => $start_date,
-        'endDate' => $end_date,
+        'startDate' => $params['from'],
+        'endDate' => $params['to'],
         'hours' => $hours,
         'reopensAt' => $opens_at ? $opens_at->format('c') : '',
         'closesAt' => $closes_at ? $closes_at->format('c') : '',
