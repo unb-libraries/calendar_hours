@@ -5,6 +5,7 @@ namespace Drupal\calendar_hours_server\Plugin\rest\resource;
 use Drupal\calendar_hours_server\Entity\HoursCalendar;
 use Drupal\calendar_hours_server\Entity\HoursCalendarStorage;
 use Drupal\calendar_hours_server\Plugin\FormatterPluginManager;
+use Drupal\calendar_hours_server\Response\Block;
 use Drupal\calendar_hours_server\Response\HoursResponse;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
@@ -94,39 +95,52 @@ class CalendarResource extends ResourceBase {
     $params = $this->getParams();
 
     try {
-      $hours = $calendar->getHours($params['from'], $params['to']);
-      $opensNext = $calendar->getOpensAt();
-      $closesNext = $calendar->getClosesAt();
-      $status = 200;
+      $blocks = $calendar->getHours($params['from'], $params['to']);
+      usort($blocks, [$this, 'sortAsc']);
+
+      $hours = [];
+      foreach ($blocks as $block) {
+        $hours[$block->startDate()][] = [
+          'from' => $block->from->format('c'),
+          'to' => $block->to->format('c'),
+        ];
+      }
+
+      $start_date = !empty($blocks) ? $blocks[0]->from->format('Y-m-d') : '';
+      $end_date = !empty($blocks) ? $blocks[count($blocks) - 1]->from->format('Y-m-d') : '';
+
+      $opens_at = $calendar->getOpensAt();
+      $closes_at = $calendar->getClosesAt();
+
+      $response = new ResourceResponse([
+        'id' => $calendar->id,
+        'title' => $calendar->title,
+        'startDate' => $start_date,
+        'endDate' => $end_date,
+        'hours' => $hours,
+        'reopensAt' => $opens_at ? $opens_at->format('c') : '',
+        'closesAt' => $closes_at ? $closes_at->format('c') : '',
+      ], 200);
+
+      $response->setMaxAge(900);
+      $response->addCacheableDependency(CacheableMetadata::createFromRenderArray([
+        '#cache' => [
+          'contexts' => [
+            'url.query_args'
+          ],
+          'tags' => [
+            'calendar_hours_' . $calendar_id,
+          ]
+        ],
+      ]));
     }
     catch (\Exception $e) {
-      drupal_set_message('An error occurred while fetching hours. An empty result has been returned.');
-      $hours = [];
-      $status = 500;
+      $this->logger->error($e->getMessage());
+      $response = new ResourceResponse([
+        'error' => $e->getCode(),
+        'message' => $e->getMessage(),
+      ], 500);
     }
-
-    $response = new HoursResponse(
-      $calendar,
-      [
-        'blocks' => $hours,
-        'opensAt' => isset($opensNext) ? $opensNext->format('c') : '',
-        'closesAt' => isset($closesNext) ? $closesNext->format('c') : '',
-      ],
-      $params['format'],
-      $status
-    );
-
-    $response->setMaxAge(900);
-    $response->addCacheableDependency(CacheableMetadata::createFromRenderArray([
-      '#cache' => [
-        'contexts' => [
-          'url.query_args'
-        ],
-        'tags' => [
-          'calendar_hours_' . $calendar_id,
-        ]
-      ],
-    ]));
 
     return $response;
   }
@@ -159,6 +173,29 @@ class CalendarResource extends ResourceBase {
       'from' => (new DrupalDateTime())->format('Y-m-d'),
       'to' => (new DrupalDateTime())->format('Y-m-d'),
     ];
+  }
+
+  /**
+   * Sorts two Blocks based on their "from" or, if equal, their "to" timestamps.
+   *
+   * @param \Drupal\calendar_hours_server\Response\Block $a
+   *   The Block in question.
+   * @param \Drupal\calendar_hours_server\Response\Block $b
+   *   The Block to compare against.
+   *
+   * @return int
+   *   < 0: $a starts or, if equal, finishes before $b
+   *   > 0: $a starts or, if equal, finishes after $b
+   *   = 0: $a starts and finishes at the same time as $b
+   */
+  protected function sortAsc(Block $a, Block $b) {
+    if (($diff_from = $a->startsBefore($b->from)) != 0) {
+      return $diff_from;
+    }
+    if (($diff_to = $a->endsBefore($b->to)) != 0) {
+      return $diff_to;
+    }
+    return 0;
   }
 
 }
