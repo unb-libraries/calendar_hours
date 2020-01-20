@@ -14,6 +14,14 @@ entity.hours_calendar.edit_form:
   requirements:
     _permission: 'administer hours calendars'
 
+entity.hours_calendar.edit_hours_form:
+  path: 'admin/config/services/hours/calendars/{hours_calendar}/hours'
+  defaults:
+    _entity_form: 'hours_calendar.edit_hours'
+    _title: 'Edit Hours'
+  requirements:
+    _permission: 'administer hours calendars'
+
 entity.hours_calendar.enable:
   path: '/admin/config/services/hours/calendars/enable'
   defaults:

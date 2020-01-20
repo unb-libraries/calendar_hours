@@ -17,6 +17,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
  *     "storage" = "Drupal\calendar_hours_server\Entity\HoursCalendarStorage",
  *     "form" = {
  *       "edit" = "Drupal\calendar_hours_server\Form\HoursCalendarForm",
+ *       "edit_hours" = "Drupal\calendar_hours_server\Form\HoursCalendarEditHoursForm",
  *       "enable" = "Drupal\calendar_hours_server\Form\HoursCalendarForm",
  *       "disable" = "Drupal\calendar_hours_server\Form\HoursCalendarDisableForm",
  *     }
@@ -36,6 +37,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
  *   },
  *   links = {
  *     "edit-form" = "/admin/config/services/hours/calendars/{hours_calendar}/edit",
+ *     "edit-hours-form" = "/admin/config/services/hours/calendars/{hours_calendar}/hours",
  *     "enable" = "/admin/config/services/hours/calendars/{vendor}/{foreign_id}/enable",
  *     "disable" = "/admin/config/services/hours/calendars/{hours_calendar}/disable",
  *   }
@@ -140,14 +142,20 @@ class HoursCalendar extends ConfigEntityBase {
   /**
    * Retrieve hours for the defined time period.
    *
-   * @param DrupalDateTime $from
+   * @param DrupalDateTime|string $from
    *   Earliest Date to be included in the hours response.
-   * @param DrupalDateTime $to
+   * @param DrupalDateTime|string $to
    *   Latest Date to be included in the hours response.
    *
    * @return \Drupal\calendar_hours_server\Response\Block[]
    */
   public function getHours($from, $to) {
+    if (!is_string($from)) {
+      $from = $from->format($this->calendarApi->getDateFormat());
+    }
+    if (!is_string($to)) {
+      $to = $to->format($this->calendarApi->getDateFormat());
+    }
     return $this->calendarApi->getHours($this, $from, $to);
   }
 

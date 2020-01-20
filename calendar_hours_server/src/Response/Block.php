@@ -31,6 +31,26 @@ final class Block {
   public $to;
 
   /**
+   * Retrieve the start time of the block.
+   *
+   * @return \Drupal\Core\Datetime\DrupalDateTime
+   *   An instance of DrupalDateTime.
+   */
+  public function getStart() {
+    return $this->from;
+  }
+
+  /**
+   * Retrieve the end time of the block.
+   *
+   * @return \Drupal\Core\Datetime\DrupalDateTime
+   *   An instance of DrupalDateTime.
+   */
+  public function getEnd() {
+    return $this->to;
+  }
+
+  /**
    * Block constructor.
    *
    * @param string $calendarId
@@ -58,10 +78,10 @@ final class Block {
    *    0: this block starts exactly at $dateTime
    */
   public function startsBefore(DrupalDateTime $dateTime) {
-    if (($diff = $this->from->diff($dateTime)->invert) > 0) {
+    if (($diff = $this->getStart()->diff($dateTime)->invert) > 0) {
       return 1;
     }
-    elseif (($diff = $dateTime->diff($this->from)->invert) > 0) {
+    elseif (($diff = $dateTime->diff($this->getStart())->invert) > 0) {
       return -1;
     }
     return 0;
@@ -79,10 +99,10 @@ final class Block {
    *    0: this block ends exactly at $dateTime
    */
   public function endsBefore(DrupalDateTime $dateTime) {
-    if (($diff = $this->to->diff($dateTime)->invert) > 0) {
+    if (($diff = $this->getEnd()->diff($dateTime)->invert) > 0) {
       return -1;
     }
-    elseif (($diff = $dateTime->diff($this->to)->invert) > 0) {
+    elseif (($diff = $dateTime->diff($this->getEnd())->invert) > 0) {
       return 1;
     }
     return 0;
@@ -95,7 +115,7 @@ final class Block {
    *   The start date of this block, formatted as string.
    */
   public function startDate() {
-    return $this->from->format('Y-m-d');
+    return $this->getStart()->format('Y-m-d');
   }
 
   /**
@@ -105,7 +125,7 @@ final class Block {
    *   The end date of this block, formatted as string.
    */
   public function endDate() {
-    return $this->to->format('Y-m-d');
+    return $this->getEnd()->format('Y-m-d');
   }
 
 }

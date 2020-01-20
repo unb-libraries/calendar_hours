@@ -101,8 +101,8 @@ class CalendarResource extends ResourceBase {
       $hours = [];
       foreach ($blocks as $block) {
         $hours[$block->startDate()][] = [
-          'from' => $block->from->format('c'),
-          'to' => $block->to->format('c'),
+          'from' => $block->getStart()->format('c'),
+          'to' => $block->getEnd()->format('c'),
         ];
       }
 
@@ -198,10 +198,10 @@ class CalendarResource extends ResourceBase {
    *   = 0: $a starts and finishes at the same time as $b
    */
   protected function sortAsc(Block $a, Block $b) {
-    if (($diff_from = $a->startsBefore($b->from)) != 0) {
+    if (($diff_from = $a->startsBefore($b->getStart())) != 0) {
       return $diff_from;
     }
-    if (($diff_to = $a->endsBefore($b->to)) != 0) {
+    if (($diff_to = $a->endsBefore($b->getEnd())) != 0) {
       return $diff_to;
     }
     return 0;
