@@ -40,7 +40,7 @@ HoursCalendarTemplate = _.template(
         "<span><%= hours[0].from %> - <%= hours[0].to %></span>" +
       "<% } else { %>" +
         "<span>" +
-          "Closed" +
+          "CLOSED" +
         "</span>" +
       "<% } %>" +
     "<% } %>" +
