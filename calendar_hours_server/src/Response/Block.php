@@ -10,6 +10,13 @@ use Drupal\Core\Datetime\DrupalDateTime;
 final class Block {
 
   /**
+   * Identifier used by the vendor.
+   *
+   * @var string
+   */
+  protected $id;
+
+  /**
    * ID of the calendar this block belongs to.
    *
    * @var string
@@ -21,14 +28,24 @@ final class Block {
    *
    * @var \Drupal\Core\Datetime\DrupalDateTime
    */
-  public $from;
+  protected $from;
 
   /**
    * When the block ends.
    *
    * @var \Drupal\Core\Datetime\DrupalDateTime
    */
-  public $to;
+  protected $to;
+
+  /**
+   * Retrieve the ID.
+   *
+   * @return string
+   *   A string.
+   */
+  public function getId() {
+    return $this->id;
+  }
 
   /**
    * Retrieve the start time of the block.
@@ -53,6 +70,8 @@ final class Block {
   /**
    * Block constructor.
    *
+   * @param string $id
+   *   Identifier used by the vendor.
    * @param string $calendarId
    *   ID of the calendar this block belongs to.
    * @param \Drupal\Core\Datetime\DrupalDateTime $from
@@ -60,7 +79,8 @@ final class Block {
    * @param \Drupal\Core\Datetime\DrupalDateTime $to
    *   Timestamp at which the block closes.
    */
-  public function __construct($calendarId, DrupalDateTime $from, DrupalDateTime $to) {
+  public function __construct($id, $calendarId, DrupalDateTime $from, DrupalDateTime $to) {
+    $this->id = $id;
     $this->calendarId = $calendarId;
     $this->from = $from;
     $this->to = $to;

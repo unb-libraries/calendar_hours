@@ -59,6 +59,7 @@ class GoogleCalendarApi extends CalendarApiBase {
       ->setEndDate($to);
 
     foreach ($query->execute() as $event) {
+      $blocks[] = new Block($event->id, $calendar->id,
         new DrupalDateTime($event->start->dateTime, $timezone),
         new DrupalDateTime($event->end->dateTime, $timezone)
       );

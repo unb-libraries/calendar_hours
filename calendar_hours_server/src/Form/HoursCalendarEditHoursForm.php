@@ -41,6 +41,11 @@ class HoursCalendarEditHoursForm extends EntityForm {
     ];
 
     if (!empty($hours)) {
+      $form['block_id'] = [
+        '#type' => 'hidden',
+        '#default_value' => $hours[0]->getId(),
+      ];
+
       $form['opens'] = [
         '#type' => 'datetime',
         '#title' => $this->t('Opens'),
