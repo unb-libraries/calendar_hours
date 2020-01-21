@@ -24,6 +24,29 @@ use Drupal\Core\Datetime\DrupalDateTime;
 class GoogleCalendarApi extends CalendarApiBase {
 
   /**
+   * Access Google Calendar API.
+   *
+   * @return mixed
+   *   The API instance.
+   */
+  protected function api() {
+    return $this->googleCalendarApi;
+  }
+
+  /**
+   * Create an event query object.
+   *
+   * @param $calendar_id
+   *   The ID of the calendar to query.
+   *
+   * @return \Drupal\calendar_hours_google\Plugin\calendar_hours\api\EventQuery
+   *   An event query instance.
+   */
+  protected function getEventQuery($calendar_id) {
+    return new EventQuery($this->api(), $calendar_id);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getHours(HoursCalendar $calendar, $from_date = 'now', $to_date = 'now') {
@@ -31,15 +54,11 @@ class GoogleCalendarApi extends CalendarApiBase {
     $from = new DrupalDateTime($from_date, $timezone);
     $to = new DrupalDateTime($to_date, $timezone);
 
-    $events = $this->googleCalendarApi->events->listEvents($calendar->foreign_id, [
-      'singleEvents' => TRUE,
-      'timeMin' => $from->setTime(0, 0, 0)->format('c'),
-      'timeMax' => $to->setTime(23, 59, 59)->format('c'),
-      'fields' => 'items(end/dateTime,start/dateTime,summary)',
-    ]);
+    $query = $this->getEventQuery($calendar->foreign_id)
+      ->setStartDate($from)
+      ->setEndDate($to);
 
-    foreach ($events->getItems() as $event) {
-      $blocks[] = new Block($calendar->id,
+    foreach ($query->execute() as $event) {
         new DrupalDateTime($event->start->dateTime, $timezone),
         new DrupalDateTime($event->end->dateTime, $timezone)
       );
@@ -73,16 +92,11 @@ class GoogleCalendarApi extends CalendarApiBase {
     $timezone = new \DateTimeZone($this->googleCalendarApi->calendars->get($calendar->foreign_id)->timeZone);
     $from = new DrupalDateTime('now', $timezone);
 
-    $eventList = $this->googleCalendarApi->events->listEvents($calendar->foreign_id, [
-      'singleEvents' => TRUE,
-      'timeMin' => $from->format('c'),
-      'maxResults' => 2,
-      'orderBy' => 'startTime',
-      'fields' => 'items(end/dateTime,start/dateTime,summary)',
-    ]);
+    $query = $this->getEventQuery($calendar->foreign_id)
+      ->setStartTime($from)
+      ->setMaxResults(2);
 
-    $events = $eventList->getItems();
-    foreach ($events as $event) {
+    foreach ($query->execute() as $event) {
       $start = new DrupalDateTime($event->start->dateTime, $timezone);
       if ($start > $from) {
         return $start;
@@ -99,16 +113,11 @@ class GoogleCalendarApi extends CalendarApiBase {
     $timezone = new \DateTimeZone($this->googleCalendarApi->calendars->get($calendar->foreign_id)->timeZone);
     $from = new DrupalDateTime('now', $timezone);
 
-    $eventList = $this->googleCalendarApi->events->listEvents($calendar->foreign_id, [
-      'singleEvents' => TRUE,
-      'timeMin' => $from->format('c'),
-      'maxResults' => 2,
-      'orderBy' => 'startTime',
-      'fields' => 'items(end/dateTime,start/dateTime,summary)',
-    ]);
+    $query = $this->getEventQuery($calendar->foreign_id)
+      ->setStartTime($from)
+      ->setMaxResults(2);
 
-    $events = $eventList->getItems();
-    foreach ($events as $event) {
+    foreach ($query->execute() as $event) {
       $start = new DrupalDateTime($event->start->dateTime, $timezone);
       $end = new DrupalDateTime($event->end->dateTime, $timezone);
       if ($start < $from && $end > $from) {
