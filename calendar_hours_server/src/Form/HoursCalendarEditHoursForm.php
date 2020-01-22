@@ -13,8 +13,8 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class HoursCalendarEditHoursForm extends EntityForm {
 
-  protected const METHOD_DELETE = 0;
-  protected const METHOD_EDIT = 1;
+  protected const ACTION_DELETE = 0;
+  protected const ACTION_EDIT = 1;
 
   /**
    * {@inheritDoc}
@@ -36,35 +36,32 @@ class HoursCalendarEditHoursForm extends EntityForm {
       '#default_value' => $today,
     ];
 
-    $form['method'] = [
-      '#type' => 'radios',
-      '#options' => [
-        self::METHOD_DELETE => $this->t('Close'),
-        self::METHOD_EDIT => $this->t('Edit Opens/Closes'),
-      ],
-      '#default_value' => self::METHOD_EDIT,
+    $form['blocks'] = [
+      '#type' => 'fieldset',
+      '#title' => $this->t('Current Hours'),
     ];
 
-    if (!empty($hours)) {
-      $form['block_id'] = [
-        '#type' => 'hidden',
-        '#default_value' => $hours[0]->getId(),
-      ];
-
-      $form['opens'] = [
-        '#type' => 'datetime',
-        '#title' => $this->t('Opens'),
-        '#date_date_element' => 'none',
-        '#default_value' => $hours[0]->getStart(),
-        '#date_timezone' => $hours[0]->getStart()->getTimezone()->getName(),
-      ];
-
-      $form['closes'] = [
-        '#type' => 'datetime',
-        '#date_date_element' => 'none',
-        '#title' => $this->t('Closes'),
-        '#default_value' => $hours[0]->getEnd(),
-        '#date_timezone' => $hours[0]->getEnd()->getTimezone()->getName(),
+    foreach ($hours as $index => $block) {
+      $form['blocks'][$index] = [
+        '#type' => count($hours) > 1 ? 'fieldset' : 'container',
+        '#title' => sprintf('%s - %s',
+          $block->getStart()->format('h:i a'), $block->getEnd()->format('h:i a')),
+        "block_id:{$index}" => [
+          '#type' => 'hidden',
+          '#default_value' => $block->getId(),
+        ],
+        "opens:{$index}" => [
+          '#type' => 'datetime',
+          '#date_date_element' => 'none',
+          '#default_value' => $block->getStart(),
+          '#date_timezone' => $block->getStart()->getTimezone()->getName(),
+        ],
+        "closes:{$index}" => [
+          '#type' => 'datetime',
+          '#date_date_element' => 'none',
+          '#default_value' => $block->getEnd(),
+          '#date_timezone' => $block->getEnd()->getTimezone()->getName(),
+        ],
       ];
     }
 
@@ -80,16 +77,19 @@ class HoursCalendarEditHoursForm extends EntityForm {
     /** @var \Drupal\calendar_hours_server\Entity\HoursCalendar $calendar */
     $calendar = $this->getEntity();
 
-    if ($event_id = $form_state->getValue('block_id')) {
-      $from = $form_state->getValue('opens');
-      $to = $form_state->getValue('closes');
-
+    if ($date = $form_state->getValue('date')) {
       try {
-        $calendar->setHours($event_id, $from, $to);
+        foreach ($calendar->getHours($date, $date) as $index => $blocks) {
+          $event_id = $form_state->getValue("block_id:{$index}");
+          $from = $form_state->getValue("opens:{$index}");
+          $to = $form_state->getValue("closes:{$index}");
+          $calendar->setHours($event_id, $from, $to);
+        }
         $this->messenger()->addStatus('Hours updated');
       }
       catch (\Exception $e) {
         $this->messenger()->addError($e->getMessage());
+        $this->messenger()->addError('Hours not or only partially updated.');
       }
     }
   }
