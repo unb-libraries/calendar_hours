@@ -61,6 +61,22 @@ class HoursCalendarEditHoursForm extends EntityForm {
   }
 
   /**
+   * {@inheritDoc}
+   */
+  protected function actions(array $form, FormStateInterface $form_state) {
+    $actions = parent::actions($form, $form_state);
+    $actions['submit']['#value'] = $this->t('Update Hours');
+
+    $actions['close'] = [
+      '#type' => 'submit',
+      '#submit' => ['::close'],
+      '#value' => $this->t('Close'),
+    ];
+
+    return $actions;
+  }
+
+  /**
    * Submit handler for the date 'Select' action.
    *
    * @param array $form
@@ -91,6 +107,23 @@ class HoursCalendarEditHoursForm extends EntityForm {
    */
   public function ajaxSelectDate(array &$form, FormStateInterface $form_state) {
     return $this->buildHoursSubForm($form['blocks'], $form_state);
+  }
+
+  /**
+   * Submit handler for the 'Close' action.
+   *
+   * @param array $form
+   *   The form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   */
+  public function close(array &$form, FormStateInterface $form_state) {
+    /** @var \Drupal\calendar_hours_server\Entity\HoursCalendar $calendar */
+    $calendar = $this->getEntity();
+    dpm($this->t('This closes @calendar for the entire day of @date', [
+      '@calendar' => $calendar->label(),
+      '@date' => $this->getDate($form_state)->format('Y-m-d'),
+    ])->render());
   }
 
   /**
