@@ -160,6 +160,29 @@ class HoursCalendar extends ConfigEntityBase {
   }
 
   /**
+   * Set hours for the defined time period.
+   *
+   * @param string $event_id
+   *   ID of the event to update.
+   * @param \Drupal\Core\Datetime\DrupalDateTime|string $from
+   *   Earliest Date to be included in the hours response.
+   * @param \Drupal\Core\Datetime\DrupalDateTime|string $to
+   *   Latest Date to be included in the hours response.
+   *
+   * @return bool
+   *   TRUE if hours could successfully be updated. FALSE otherwise.
+   */
+  public function setHours($event_id, $from, $to) {
+    if (!is_string($from)) {
+      $from = $from->format($this->calendarApi->getDateTimeFormat());
+    }
+    if (!is_string($to)) {
+      $to = $to->format($this->calendarApi->getDateTimeFormat());
+    }
+    return $this->calendarApi->setHours($this, $event_id, $from, $to);
+  }
+
+  /**
    * Retrieve the next time the unit represented by this calendar opens or, if already open, reopens.
    *
    * @return \Drupal\Core\Datetime\DrupalDateTime

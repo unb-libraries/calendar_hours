@@ -3,12 +3,14 @@
 namespace Drupal\calendar_hours_server\Plugin;
 
 use Drupal\calendar_hours_server\Entity\HoursCalendar;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Plugin\PluginBase;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 abstract class CalendarApiBase extends PluginBase implements CalendarApiInterface {
 
   const DATE_FORMAT = 'Y-m-d';
+  const DATE_TIME_FORMAT = 'c';
 
   /**
    * Services this Plugin may need to rely on.
@@ -52,6 +54,16 @@ abstract class CalendarApiBase extends PluginBase implements CalendarApiInterfac
    */
   public function getDateFormat() {
     return self::DATE_FORMAT;
+  }
+
+  /**
+   * Retrieve the datetime format.
+   *
+   * @return string
+   *   A date time string.
+   */
+  public function getDateTimeFormat() {
+    return self::DATE_TIME_FORMAT;
   }
 
 }

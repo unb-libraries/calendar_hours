@@ -67,6 +67,24 @@ class GoogleCalendarApi extends CalendarApiBase {
     return isset($blocks) ? $blocks : [];
   }
 
+  public function setHours(HoursCalendar $calendar, $event_id, $from, $to) {
+    $start = new \Google_Service_Calendar_EventDateTime();
+    $start->setDateTime($from);
+    $end = new \Google_Service_Calendar_EventDateTime();
+    $end->setDateTime($to);
+
+    $event = new \Google_Service_Calendar_Event();
+    $event->setStart($start);
+    $event->setEnd($end);
+
+    $events = $this->api()->events;
+
+    if ($event = $events->patch($calendar->foreign_id, $event_id, $event)) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
   /**
    * {@inheritdoc}
    */

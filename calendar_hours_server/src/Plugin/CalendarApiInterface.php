@@ -41,6 +41,23 @@ interface CalendarApiInterface {
   public function getHours(HoursCalendar $calendar, $from_date, $to_date);
 
   /**
+   * Assign hours for the unit represented by the given calendar and the given event.
+   *
+   * @param \Drupal\calendar_hours_server\Entity\HoursCalendar $calendar
+   *   The calendar containing the hours information.
+   * @param string $event_id
+   *   ID of the event to update.
+   * @param string $from
+   *   Earliest Date to be included in the hours response.
+   * @param string $to
+   *   Latest Date to be included in the hours response.
+   *
+   * @return bool
+   *   TRUE if hours could be successfully set. FALSE otherwise.
+   */
+  public function setHours(HoursCalendar $calendar, $event_id, $from, $to);
+
+  /**
    * List IDs of all Calendars provided by the vendor.
    *
    * @return array
