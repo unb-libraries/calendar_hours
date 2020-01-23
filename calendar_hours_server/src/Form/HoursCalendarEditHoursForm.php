@@ -110,30 +110,6 @@ class HoursCalendarEditHoursForm extends EntityForm {
   }
 
   /**
-   * Submit handler for the 'Close' action.
-   *
-   * @param array $form
-   *   The form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The form state.
-   */
-  public function close(array &$form, FormStateInterface $form_state) {
-    /** @var \Drupal\calendar_hours_server\Entity\HoursCalendar $calendar */
-    $calendar = $this->getEntity();
-
-    if ($calendar->close($this->getDate($form_state))) {
-      $this->messenger()->addStatus($this->t('@calendar successfully close.', [
-        '@calendar' => $calendar->label(),
-      ]));
-    }
-    else {
-      $this->messenger()->addError($this->t('@calendar could not be closed.', [
-        '@calendar' => $calendar->label(),
-      ]));
-    }
-  }
-
-  /**
    * Build the form elements to edit hours.
    *
    * @param array $container
@@ -194,16 +170,19 @@ class HoursCalendarEditHoursForm extends EntityForm {
    *   A date time object.
    */
   protected function getDate(FormStateInterface $form_state) {
+    // TODO: Find a way to share timezone setting across the module.
+    $timezone_name = \Drupal::config('system.date')->get('timezone.default');
+    $timezone = new \DateTimeZone($timezone_name);
     if ($form_state->hasValue('date')) {
       $date = DrupalDateTime::createFromFormat(
-        'Y-m-d', $form_state->getValue('date'));
+        'Y-m-d', $form_state->getValue('date'), $timezone);
     }
     elseif ($this->getRequest()->query->has('date')) {
       $date = DrupalDateTime::createFromFormat(
-        'Y-m-d', $this->getRequest()->query->get('date'));
+        'Y-m-d', $this->getRequest()->query->get('date'), $timezone);
     }
     else {
-      $date = new DrupalDateTime();
+      $date = new DrupalDateTime('now', $timezone);
     }
     return $date;
   }
@@ -246,6 +225,30 @@ class HoursCalendarEditHoursForm extends EntityForm {
         $this->messenger()->addError($e->getMessage());
         $this->messenger()->addError('Hours not or only partially updated.');
       }
+    }
+  }
+
+  /**
+   * Submit handler for the 'Close' action.
+   *
+   * @param array $form
+   *   The form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   */
+  public function close(array &$form, FormStateInterface $form_state) {
+    /** @var \Drupal\calendar_hours_server\Entity\HoursCalendar $calendar */
+    $calendar = $this->getEntity();
+
+    if ($calendar->close($this->getDate($form_state))) {
+      $this->messenger()->addStatus($this->t('@calendar successfully close.', [
+        '@calendar' => $calendar->label(),
+      ]));
+    }
+    else {
+      $this->messenger()->addError($this->t('@calendar could not be closed.', [
+        '@calendar' => $calendar->label(),
+      ]));
     }
   }
 
