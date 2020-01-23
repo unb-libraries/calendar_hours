@@ -183,6 +183,19 @@ class HoursCalendar extends ConfigEntityBase {
   }
 
   /**
+   * Close the unit represented by this calendar for the given date.
+   *
+   * @param $date
+   *   The date.
+   *
+   * @return bool
+   *   TRUE if 'closing' the calendar was successfully. FALSE otherwise.
+   */
+  public function close($date) {
+    return $this->calendarApi->close($this, $date);
+  }
+
+  /**
    * Retrieve the next time the unit represented by this calendar opens or, if already open, reopens.
    *
    * @return \Drupal\Core\Datetime\DrupalDateTime

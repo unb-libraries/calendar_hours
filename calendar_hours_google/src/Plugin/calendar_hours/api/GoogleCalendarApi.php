@@ -67,6 +67,9 @@ class GoogleCalendarApi extends CalendarApiBase {
     return isset($blocks) ? $blocks : [];
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public function setHours(HoursCalendar $calendar, $event_id, $from, $to) {
     $start = new \Google_Service_Calendar_EventDateTime();
     $start->setDateTime($from);
@@ -83,6 +86,27 @@ class GoogleCalendarApi extends CalendarApiBase {
       return TRUE;
     }
     return FALSE;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function close(HoursCalendar $calendar, DrupalDateTime $date) {
+    $events = $this->getEventQuery($calendar->foreign_id)
+      ->setStartDate($date)
+      ->setEndDate($date)
+      ->execute();
+
+    $eventList = $this->api()->events;
+
+    $success = TRUE;
+    foreach ($events as $event) {
+      /** @var \Google_Service_Calendar_Event $event */
+      if (!$eventList->delete($calendar->foreign_id, $event->id)) {
+        $success = FALSE;
+      }
+    }
+    return $success;
   }
 
   /**

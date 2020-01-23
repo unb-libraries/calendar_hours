@@ -120,10 +120,17 @@ class HoursCalendarEditHoursForm extends EntityForm {
   public function close(array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\calendar_hours_server\Entity\HoursCalendar $calendar */
     $calendar = $this->getEntity();
-    dpm($this->t('This closes @calendar for the entire day of @date', [
-      '@calendar' => $calendar->label(),
-      '@date' => $this->getDate($form_state)->format('Y-m-d'),
-    ])->render());
+
+    if ($calendar->close($this->getDate($form_state))) {
+      $this->messenger()->addStatus($this->t('@calendar successfully close.', [
+        '@calendar' => $calendar->label(),
+      ]));
+    }
+    else {
+      $this->messenger()->addError($this->t('@calendar could not be closed.', [
+        '@calendar' => $calendar->label(),
+      ]));
+    }
   }
 
   /**

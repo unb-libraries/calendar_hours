@@ -58,6 +58,19 @@ interface CalendarApiInterface {
   public function setHours(HoursCalendar $calendar, $event_id, $from, $to);
 
   /**
+   * Remove all events for the given calendar and on the given date.
+   *
+   * @param \Drupal\calendar_hours_server\Entity\HoursCalendar $calendar
+   *   The calendar.
+   * @param \Drupal\Core\Datetime\DrupalDateTime $date
+   *   The date.
+   *
+   * @return bool
+   *   TRUE if all events could successfully be removed. FALSE otherwise.
+   */
+  public function close(HoursCalendar $calendar, DrupalDateTime $date);
+
+  /**
    * List IDs of all Calendars provided by the vendor.
    *
    * @return array
