@@ -110,4 +110,15 @@ interface CalendarApiInterface {
    */
   public function getClosesAt(HoursCalendar $calendar);
 
+  /**
+   * Retrieve the timezone setting of the given calendar.
+   *
+   * @param \Drupal\calendar_hours_server\Entity\HoursCalendar $calendar
+   *   The calendar to query.
+   *
+   * @return \DateTimeZone
+   *   A timezone object.
+   */
+  public function getTimezone(HoursCalendar $calendar);
+
 }

@@ -50,7 +50,7 @@ class GoogleCalendarApi extends CalendarApiBase {
    * {@inheritdoc}
    */
   public function getHours(HoursCalendar $calendar, $from_date = 'now', $to_date = 'now') {
-    $timezone = new \DateTimeZone($this->googleCalendarApi->calendars->get($calendar->foreign_id)->timeZone);
+    $timezone = $this->getTimezone($calendar);
     $from = new DrupalDateTime($from_date, $timezone);
     $to = new DrupalDateTime($to_date, $timezone);
 
@@ -132,7 +132,7 @@ class GoogleCalendarApi extends CalendarApiBase {
    * {@inheritDoc}
    */
   public function getOpensAt(HoursCalendar $calendar) {
-    $timezone = new \DateTimeZone($this->googleCalendarApi->calendars->get($calendar->foreign_id)->timeZone);
+    $timezone = $this->getTimezone($calendar);
     $from = new DrupalDateTime('now', $timezone);
 
     $query = $this->getEventQuery($calendar->foreign_id)
@@ -153,7 +153,7 @@ class GoogleCalendarApi extends CalendarApiBase {
    * {@inheritDoc}
    */
   public function getClosesAt(HoursCalendar $calendar) {
-    $timezone = new \DateTimeZone($this->googleCalendarApi->calendars->get($calendar->foreign_id)->timeZone);
+    $timezone = $this->getTimezone($calendar);
     $from = new DrupalDateTime('now', $timezone);
 
     $query = $this->getEventQuery($calendar->foreign_id)
@@ -169,6 +169,17 @@ class GoogleCalendarApi extends CalendarApiBase {
     }
 
     return NULL;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getTimezone(HoursCalendar $calendar) {
+    $timezone_name = $this->googleCalendarApi
+      ->calendars
+      ->get($calendar->foreign_id)
+      ->timeZone;
+    return new \DateTimeZone($timezone_name);
   }
 
 }

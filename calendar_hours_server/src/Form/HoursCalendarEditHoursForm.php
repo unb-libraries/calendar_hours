@@ -231,9 +231,7 @@ class HoursCalendarEditHoursForm extends EntityForm {
    *   A date time object.
    */
   protected function getDate(FormStateInterface $form_state = NULL) {
-    // TODO: Find a way to share timezone setting across the module.
-    $timezone_name = \Drupal::config('system.date')->get('timezone.default');
-    $timezone = new \DateTimeZone($timezone_name);
+    $timezone = $this->getCalendar()->getTimezone();
     if ($form_state && $form_state->hasValue('date')) {
       $date = DrupalDateTime::createFromFormat(
         'Y-m-d', $form_state->getValue('date'), $timezone);

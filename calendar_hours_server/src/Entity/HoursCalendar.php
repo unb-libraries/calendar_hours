@@ -215,6 +215,10 @@ class HoursCalendar extends ConfigEntityBase {
     return $this->calendarApi->getClosesAt($this);
   }
 
+  public function getTimezone() {
+    return $this->calendarApi->getTimezone($this);
+  }
+
   /**
    * {@inheritDoc}
    */
