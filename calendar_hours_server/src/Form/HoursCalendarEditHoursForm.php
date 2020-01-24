@@ -17,6 +17,41 @@ class HoursCalendarEditHoursForm extends EntityForm {
   protected const ACTION_EDIT = 1;
 
   /**
+   * Current hours.
+   *
+   * @var \Drupal\calendar_hours_server\Response\Block[]
+   */
+  protected $hours;
+
+  /**
+   * Retrieve hours for the current calendar and the given date.
+   *
+   * @param \Drupal\Core\Datetime\DrupalDateTime|string $date
+   *   A date formatted string or an instance of DrupalDateTime.
+   *
+   * @return \Drupal\calendar_hours_server\Response\Block[]
+   *   An array of hours blocks.
+   */
+  protected function getHours($date) {
+    if (!isset($this->hours)) {
+      $this->hours = $this->getCalendar()->getHours($date, $date);
+    }
+    return $this->hours;
+  }
+
+  /**
+   * Retrieve calendar.
+   *
+   * @return \Drupal\calendar_hours_server\Entity\HoursCalendar
+   *   An instance of HoursCalendar.
+   */
+  protected function getCalendar() {
+    /** @var \Drupal\calendar_hours_server\Entity\HoursCalendar $calendar */
+    $calendar = $this->getEntity();
+    return $calendar;
+  }
+
+  /**
    * {@inheritDoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
@@ -64,16 +99,32 @@ class HoursCalendarEditHoursForm extends EntityForm {
    * {@inheritDoc}
    */
   protected function actions(array $form, FormStateInterface $form_state) {
-    $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = $this->t('Update Hours');
+    if (!$this->isClosed()) {
+      $actions = parent::actions($form, $form_state);
+      $actions['submit']['#value'] = $this->t('Update Hours');
 
-    $actions['close'] = [
-      '#type' => 'submit',
-      '#submit' => ['::close'],
-      '#value' => $this->t('Close'),
-    ];
+      $actions['close'] = [
+        '#type' => 'submit',
+        '#submit' => ['::close'],
+        '#value' => $this->t('Close'),
+      ];
+    }
+    else {
+      $actions = [];
+    }
 
     return $actions;
+  }
+
+  /**
+   * Whether the unit represented by the calendar is currently closed.
+   *
+   * @return bool
+   *   TRUE if currently closed. FALSE otherwise.
+   */
+  protected function isClosed() {
+    $hours = $this->getHours($this->getDate());
+    return empty($hours);
   }
 
   /**
@@ -121,34 +172,44 @@ class HoursCalendarEditHoursForm extends EntityForm {
    *   A render array containing the generated sub-form.
    */
   protected function buildHoursSubForm(array $container, FormStateInterface $form_state) {
-    /** @var \Drupal\calendar_hours_server\Entity\HoursCalendar $calendar */
-    $calendar = $this->getEntity();
-
     if ($date = $this->getDate($form_state)) {
-      $hours = $calendar->getHours($date, $date);
-      foreach ($hours as $index => $block) {
-        $container[$index] = [
-          '#type' => count($hours) > 1 ? 'fieldset' : 'container',
-          '#title' => sprintf('%s - %s',
-            $block->getStart()->format('h:i a'), $block->getEnd()->format('h:i a')),
-          "block_id:{$index}" => [
-            '#type' => 'hidden',
-            '#default_value' => $block->getId(),
-          ],
-          "opens:{$index}" => [
-            '#type' => 'datetime',
-            '#date_date_element' => 'none',
-            '#default_value' => $block->getStart(),
-            '#date_timezone' => $block->getStart()->getTimezone()->getName(),
-          ],
-          "closes:{$index}" => [
-            '#type' => 'datetime',
-            '#date_date_element' => 'none',
-            '#default_value' => $block->getEnd(),
-            '#date_timezone' => $block->getEnd()->getTimezone()->getName(),
-          ],
+      $hours = $this->getHours($date);
+      if (!empty($hours)) {
+        foreach ($hours as $index => $block) {
+          $container[$index] = [
+            '#type' => count($hours) > 1 ? 'fieldset' : 'container',
+            '#title' => sprintf('%s - %s',
+              $block->getStart()->format('h:i a'), $block->getEnd()->format('h:i a')),
+            "block_id:{$index}" => [
+              '#type' => 'hidden',
+              '#default_value' => $block->getId(),
+            ],
+            "opens:{$index}" => [
+              '#type' => 'datetime',
+              '#date_date_element' => 'none',
+              '#default_value' => $block->getStart(),
+              '#date_timezone' => $block->getStart()->getTimezone()->getName(),
+            ],
+            "closes:{$index}" => [
+              '#type' => 'datetime',
+              '#date_date_element' => 'none',
+              '#default_value' => $block->getEnd(),
+              '#date_timezone' => $block->getEnd()->getTimezone()->getName(),
+            ],
+          ];
+        }
+      }
+      else {
+        $container['message'] = [
+          '#type' => 'html_tag',
+          '#tag' => 'p',
+          '#value' => $this->t('@calendar is closed on the selected date, but you can @create_link.', [
+            '@calendar' => $this->getCalendar()->label(),
+            '@create_link' => 'add hours',
+          ]),
         ];
       }
+
     }
 
     return $container;
@@ -169,11 +230,11 @@ class HoursCalendarEditHoursForm extends EntityForm {
    * @return \Drupal\Core\Datetime\DrupalDateTime
    *   A date time object.
    */
-  protected function getDate(FormStateInterface $form_state) {
+  protected function getDate(FormStateInterface $form_state = NULL) {
     // TODO: Find a way to share timezone setting across the module.
     $timezone_name = \Drupal::config('system.date')->get('timezone.default');
     $timezone = new \DateTimeZone($timezone_name);
-    if ($form_state->hasValue('date')) {
+    if ($form_state && $form_state->hasValue('date')) {
       $date = DrupalDateTime::createFromFormat(
         'Y-m-d', $form_state->getValue('date'), $timezone);
     }
