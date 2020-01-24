@@ -3,6 +3,7 @@
 namespace Drupal\calendar_hours_server\Plugin;
 
 use Drupal\calendar_hours_server\Entity\HoursCalendar;
+use Drupal\calendar_hours_server\Response\Block;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
@@ -56,6 +57,19 @@ interface CalendarApiInterface {
    *   TRUE if hours could be successfully set. FALSE otherwise.
    */
   public function setHours(HoursCalendar $calendar, $event_id, $from, $to);
+
+  /**
+   * Create a new block of hours.
+   *
+   * @param \Drupal\calendar_hours_server\Entity\HoursCalendar $calendar
+   *   The calendar to receive the block.
+   * @param \Drupal\calendar_hours_server\Response\Block $block
+   *   The block.
+   *
+   * @return bool
+   *   TRUE if the hours could successfully be created. FALSE otherwise.
+   */
+  public function createHours(HoursCalendar $calendar, Block $block);
 
   /**
    * Remove all events for the given calendar and on the given date.

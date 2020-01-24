@@ -91,6 +91,25 @@ class GoogleCalendarApi extends CalendarApiBase {
   /**
    * {@inheritDoc}
    */
+  public function createHours(HoursCalendar $calendar, Block $block) {
+    $start = new \Google_Service_Calendar_EventDateTime();
+    $start->setDateTime($block->getStart()->format('c'));
+    $end = new \Google_Service_Calendar_EventDateTime();
+    $end->setDateTime($block->getEnd()->format('c'));
+
+    $event = new \Google_Service_Calendar_Event();
+    $event->setStart($start);
+    $event->setEnd($end);
+
+    if ($this->api()->events->insert($calendar->foreign_id, $event)){
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public function close(HoursCalendar $calendar, DrupalDateTime $date) {
     $events = $this->getEventQuery($calendar->foreign_id)
       ->setStartDate($date)

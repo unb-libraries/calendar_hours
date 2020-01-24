@@ -3,6 +3,7 @@
 namespace Drupal\calendar_hours_server\Entity;
 
 use Drupal\calendar_hours_server\Plugin\CalendarApiInterface;
+use Drupal\calendar_hours_server\Response\Block;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 
@@ -182,6 +183,22 @@ class HoursCalendar extends ConfigEntityBase {
       $to = $to->format($this->calendarApi->getDateTimeFormat());
     }
     return $this->calendarApi->setHours($this, $event_id, $from, $to);
+  }
+
+  /**
+   * Create new hours.
+   *
+   * @param \Drupal\Core\Datetime\DrupalDateTime $from
+   *   When hours should begin.
+   * @param \Drupal\Core\Datetime\DrupalDateTime $to
+   *   When hours should end.
+   *
+   * @return bool
+   *   TRUE if hours could successfully be created. FALSE otherwise.
+   */
+  public function createHours($from, $to) {
+    $block = new Block('', $this->id(), $from, $to);
+    return $this->calendarApi->createHours($this, $block);
   }
 
   /**

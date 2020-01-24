@@ -138,7 +138,7 @@ class HoursCalendarEditHoursForm extends EntityForm {
    */
   public function selectDate(array &$form, FormStateInterface $form_state) {
     $form_state->setRedirect('entity.hours_calendar.edit_hours_form', [
-      'hours_calendar' => $this->getEntity()->id(),
+      'hours_calendar' => $this->getCalendar()->id(),
     ], [
       'query' => [
         'date' => $form_state->getValue('date'),

@@ -52,9 +52,11 @@ class HoursCalendarAddHoursForm extends EntityForm {
       ->add(\DateInterval::createFromDateString('1 day'));
 
     $form['date'] = [
-      '#type' => 'date',
+      '#type' => 'datetime',
       '#title' => $this->t('Date'),
-      '#default_value' => $date->format('Y-m-d'),
+      '#date_time_element' => 'none',
+      '#default_value' => $date,
+      '#date_timezone' => $timezone->getName(),
     ];
 
     $form['from'] = [
@@ -82,17 +84,47 @@ class HoursCalendarAddHoursForm extends EntityForm {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
+    /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
+    $date = $form_state->getValue('date');
     /** @var \Drupal\Core\Datetime\DrupalDateTime $from */
     $from = $form_state->getValue('from');
+    $from->setDate(
+      intval($date->format('Y')),
+      intval($date->format('m')),
+      intval($date->format('d'))
+    );
     /** @var \Drupal\Core\Datetime\DrupalDateTime $to */
     $to = $form_state->getValue('to');
+    $to->setDate(
+      intval($date->format('Y')),
+      intval($date->format('m')),
+      intval($date->format('d'))
+    );
 
     if ($from->getTimestamp() - $to->getTimestamp() > 0) {
       $to->add(\DateInterval::createFromDateString('1 day'));
     }
 
-    dpm($from);
-    dpm($to);
+    $this->tryCreatingHours($from, $to);
+  }
+
+  /**
+   * Try creating hours. Display a message on success or failure.
+   *
+   * @param \Drupal\Core\Datetime\DrupalDateTime $from
+   *   When hours should begin.
+   * @param \Drupal\Core\Datetime\DrupalDateTime $to
+   *   When hours should end.
+   */
+  protected function tryCreatingHours(DrupalDateTime $from, DrupalDateTime $to) {
+    try {
+      $this->getCalendar()->createHours($from, $to);
+      $this->messenger()->addStatus($this->t('Hours successfully created.'));
+    }
+    catch (\Exception $e) {
+      $this->messenger()->addError($e->getMessage());
+      $this->messenger()->addError($this->t('Hours could not be created.'));
+    }
   }
 
 }
