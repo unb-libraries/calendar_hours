@@ -132,6 +132,13 @@ class HoursCalendarListBuilder extends ConfigEntityListBuilder {
           'url' => $this->ensureDestination($entity->toUrl('edit-form')),
         ];
       }
+      if ($entity->hasLinkTemplate('add-hours-form')) {
+        $operations['add-hours-form'] = [
+          'title' => t('Add Hours'),
+          'weight' => 80,
+          'url' => $this->ensureDestination($entity->toUrl('add-hours-form')),
+        ];
+      }
       if ($entity->hasLinkTemplate('edit-hours-form')) {
         $operations['edit-hours-form'] = [
           'title' => t('Edit Hours'),
