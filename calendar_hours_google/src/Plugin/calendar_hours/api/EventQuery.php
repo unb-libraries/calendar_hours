@@ -62,6 +62,13 @@ class EventQuery {
   protected $params;
 
   /**
+   * Whether to return no events that started before the queried start time.
+   *
+   * @var bool
+   */
+  protected $startTimeStrict = TRUE;
+
+  /**
    * Creates an EventQuery instance.
    *
    * @param \Google_Service_Calendar $api
@@ -92,6 +99,31 @@ class EventQuery {
    */
   public function getCalendarId() {
     return $this->calendarId;
+  }
+
+  /**
+   * Whether this query will return NO events which start before the configured start time.
+   *
+   * @return bool
+   *   TRUE if only events starting after the configured start time
+   *   will be returned. FALSE otherwise. Defaults to TRUE.
+   */
+  public function getStartTimeStrict() {
+    return $this->startTimeStrict;
+  }
+
+  /**
+   * Enable or disable returning events which start before the configured start time.
+   *
+   * @param bool $strict
+   *   Whether to match strict.
+   *
+   * @return \Drupal\calendar_hours_google\Plugin\calendar_hours\api\EventQuery
+   *   The called instance.
+   */
+  public function setStartTimeStrict($strict) {
+    $this->startTimeStrict = $strict;
+    return $this;
   }
 
   /**
@@ -195,8 +227,8 @@ class EventQuery {
     if (!($date instanceof DrupalDateTime)) {
       $date = self::createDateTimeFromString($date);
     }
-    return $this->setParam(
-      self::PARAM_START_TIME, $date
+    return $this->setStartTimeStrict(TRUE)
+      ->setParam(self::PARAM_START_TIME, $date
         ->setTime(0, 0, 0)
         ->format(self::DATE_TIME_FORMAT));
   }
@@ -215,9 +247,9 @@ class EventQuery {
     if (!($time instanceof DrupalDateTime)) {
       $time = self::createDateTimeFromString($time);
     }
-    return $this->setParam(
-      self::PARAM_START_TIME, $time
-      ->format(self::DATE_TIME_FORMAT));
+    return $this->setStartTimeStrict(FALSE)
+      ->setParam(self::PARAM_START_TIME, $time
+        ->format(self::DATE_TIME_FORMAT));
   }
 
   /**
@@ -235,7 +267,8 @@ class EventQuery {
     }
     return $this->setParam(
       self::PARAM_END_TIME, $date
-        ->setTime(23, 59, 59)
+        ->setTime(0, 0, 0)
+        ->add(\DateInterval::createFromDateString('1 day'))
         ->format(self::DATE_TIME_FORMAT));
   }
 
@@ -345,15 +378,43 @@ class EventQuery {
   /**
    * Execute the query.
    *
-   * @return \Google_Service_Calendar_Event
+   * @return \Google_Service_Calendar_Event|\Google_Service_Calendar_Event[]
    *   List of Google Calendar events.
    */
   public function execute() {
     $events = $this->api()
       ->events
       ->listEvents(
-        $this->getCalendarId(), $this->getParams());
-    return $events->getItems();
+        $this->getCalendarId(), $this->getParams())
+      ->getItems();
+
+    if ($this->getStartTimeStrict()) {
+      $events = $this->filterStartTimeStrict($events);
+    }
+
+    return $events;
+  }
+
+  /**
+   * Filters events and returns only those which entirely match the queried time span.
+   *
+   * @param mixed $events
+   *   The events.
+   *
+   * @return \Google_Service_Calendar_Event[]
+   *   Array of Google events.
+   */
+  protected function filterStartTimeStrict($events) {
+    $filtered_events = [];
+
+    $query_start_date = $this->getParams()[self::PARAM_START_TIME];
+    foreach ($events as $event) {
+      if ($event->start->dateTime >= $query_start_date) {
+        $filtered_events[] = $event;
+      }
+    }
+
+    return $filtered_events;
   }
 
 }

@@ -101,7 +101,7 @@ class GoogleCalendarApi extends CalendarApiBase {
     $event->setStart($start);
     $event->setEnd($end);
 
-    if ($this->api()->events->insert($calendar->foreign_id, $event)){
+    if ($this->api()->events->insert($calendar->foreign_id, $event)) {
       return TRUE;
     }
     return FALSE;
