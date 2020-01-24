@@ -17,6 +17,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
  *     "storage" = "Drupal\calendar_hours_server\Entity\HoursCalendarStorage",
  *     "form" = {
  *       "edit" = "Drupal\calendar_hours_server\Form\HoursCalendarForm",
+ *       "add_hours" = "Drupal\calendar_hours_server\Form\HoursCalendarAddHoursForm",
  *       "edit_hours" = "Drupal\calendar_hours_server\Form\HoursCalendarEditHoursForm",
  *       "enable" = "Drupal\calendar_hours_server\Form\HoursCalendarForm",
  *       "disable" = "Drupal\calendar_hours_server\Form\HoursCalendarDisableForm",
@@ -37,6 +38,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
  *   },
  *   links = {
  *     "edit-form" = "/admin/config/services/hours/calendars/{hours_calendar}/edit",
+ *     "add-hours-form" = "/admin/config/services/hours/calendars/{hours_calendar}/hours/add",
  *     "edit-hours-form" = "/admin/config/services/hours/calendars/{hours_calendar}/hours",
  *     "enable" = "/admin/config/services/hours/calendars/{vendor}/{foreign_id}/enable",
  *     "disable" = "/admin/config/services/hours/calendars/{hours_calendar}/disable",

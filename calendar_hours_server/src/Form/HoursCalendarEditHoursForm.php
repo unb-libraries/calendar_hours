@@ -5,6 +5,7 @@ namespace Drupal\calendar_hours_server\Form;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 
 /**
  * Form to edit calendar hours.
@@ -200,12 +201,18 @@ class HoursCalendarEditHoursForm extends EntityForm {
         }
       }
       else {
+        $add_hours_url = $this->getCalendar()
+          ->toUrl('add-hours-form')
+          ->setOption('query', [
+            'date' => $date->format('Y-m-d'),
+          ]);
+        $add_hours_link = Link::fromTextAndUrl('add hours', $add_hours_url);
         $container['message'] = [
           '#type' => 'html_tag',
           '#tag' => 'p',
           '#value' => $this->t('@calendar is closed on the selected date, but you can @create_link.', [
             '@calendar' => $this->getCalendar()->label(),
-            '@create_link' => 'add hours',
+            '@create_link' => $add_hours_link->toString(),
           ]),
         ];
       }
