@@ -291,6 +291,9 @@ class HoursCalendarEditHoursForm extends EntityForm {
             '@hours_end' => $to->format('h:i a'),
             '@date' => $from->format('M jS, Y'),
           ]));
+          $this->messenger()->addWarning($this->t('Hours will not update on the website until @release_time.', [
+            '@release_time' => $this->nextQuarterHour()->format('h:i a'),
+          ]));
         }
       }
       catch (\Exception $e) {
@@ -313,8 +316,12 @@ class HoursCalendarEditHoursForm extends EntityForm {
     $calendar = $this->getEntity();
 
     if ($calendar->close($this->getDate($form_state))) {
-      $this->messenger()->addStatus($this->t('@calendar is now closed closed.', [
+      $this->messenger()->addStatus($this->t('@calendar is now closed on @date.', [
         '@calendar' => $calendar->label(),
+        '@date' => $this->getDate($form_state)->format('D jS, Y'),
+      ]));
+      $this->messenger()->addWarning($this->t('Hours will not update on the website until @release_time.', [
+        '@release_time' => $this->nextQuarterHour()->format('h:i a'),
       ]));
     }
     else {
@@ -322,6 +329,25 @@ class HoursCalendarEditHoursForm extends EntityForm {
         '@calendar' => $calendar->label(),
       ]));
     }
+  }
+
+  /**
+   * Retrieve a date time object which represents the next quarter of the hour.
+   *
+   * @return \Drupal\Core\Datetime\DrupalDateTime
+   *   A datetime object.
+   */
+  protected function nextQuarterHour() {
+    $release_time = new DrupalDateTime('now');
+    $hour = intval($release_time->format('H'));
+    $minute = intval($release_time->format('i'));
+    $past_quarter_hour = floor($minute / 15) * 15;
+    $next_quarter_hour = $past_quarter_hour + 15;
+
+    $release_time->setTime($hour, 0, 0)
+      ->add(\DateInterval::createFromDateString("{$next_quarter_hour} minutes"));
+
+    return $release_time;
   }
 
 }
