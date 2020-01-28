@@ -28,7 +28,8 @@
       return attrs !== null;
     },
 
-    restore: function(calendarId, options = {'restorePastDates': false}) {
+    restore: function(calendarId, options) {
+      options = options || {'restorePastDates': false};
       var attrs = this.localStorage.find({id: calendarId});
       this.add(new this.model(attrs));
       var model = this.get(calendarId);
