@@ -284,8 +284,14 @@ class HoursCalendarEditHoursForm extends EntityForm {
           );
 
           $calendar->setHours($event_id, $from, $to);
+
+          $this->messenger()->addStatus($this->t('@calendar is now open from @hours_start - @hours_end on @date.', [
+            '@calendar' => $this->getCalendar()->label(),
+            '@hours_start' => $from->format('h:i a'),
+            '@hours_end' => $to->format('h:i a'),
+            '@date' => $from->format('M jS, Y'),
+          ]));
         }
-        $this->messenger()->addStatus('Hours updated');
       }
       catch (\Exception $e) {
         $this->messenger()->addError($e->getMessage());
@@ -307,7 +313,7 @@ class HoursCalendarEditHoursForm extends EntityForm {
     $calendar = $this->getEntity();
 
     if ($calendar->close($this->getDate($form_state))) {
-      $this->messenger()->addStatus($this->t('@calendar successfully close.', [
+      $this->messenger()->addStatus($this->t('@calendar is now closed closed.', [
         '@calendar' => $calendar->label(),
       ]));
     }

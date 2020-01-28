@@ -119,7 +119,12 @@ class HoursCalendarAddHoursForm extends EntityForm {
   protected function tryCreatingHours(DrupalDateTime $from, DrupalDateTime $to) {
     try {
       $this->getCalendar()->createHours($from, $to);
-      $this->messenger()->addStatus($this->t('Hours successfully created.'));
+      $this->messenger()->addStatus($this->t('@calendar is now open from @hours_start - @hours_end on @date.', [
+        '@calendar' => $this->getCalendar()->label(),
+        '@hours_start' => $from->format('h:i a'),
+        '@hours_end' => $to->format('h:i a'),
+        '@date' => $from->format('M jS, Y'),
+      ]));
     }
     catch (\Exception $e) {
       $this->messenger()->addError($e->getMessage());
