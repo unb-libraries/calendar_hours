@@ -1,2 +1,8 @@
 administer hours calendars:
   title: 'Administer Hours Calendars'
+
+create hours:
+  title: 'Create hours'
+
+edit hours:
+  title: 'Edit hours'

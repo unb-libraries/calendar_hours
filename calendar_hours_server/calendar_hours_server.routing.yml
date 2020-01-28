@@ -20,7 +20,7 @@ entity.hours_calendar.add_hours_form:
     _entity_form: 'hours_calendar.add_hours'
     _title: 'Add Hours'
   requirements:
-    _permission: 'administer hours calendars'
+    _permission: 'create hours'
 
 entity.hours_calendar.edit_hours_form:
   path: 'admin/config/services/hours/calendars/{hours_calendar}/hours'
@@ -28,7 +28,7 @@ entity.hours_calendar.edit_hours_form:
     _entity_form: 'hours_calendar.edit_hours'
     _title: 'Edit Hours'
   requirements:
-    _permission: 'administer hours calendars'
+    _permission: 'edit hours'
 
 entity.hours_calendar.enable:
   path: '/admin/config/services/hours/calendars/enable'
