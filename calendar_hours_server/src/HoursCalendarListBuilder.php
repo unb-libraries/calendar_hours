@@ -61,10 +61,10 @@ class HoursCalendarListBuilder extends ConfigEntityListBuilder {
       try {
         $calendar_ids = $api->getForeignIds();
       } catch (\Exception $e) {
-        drupal_set_message(sprintf(
-          'An error occurred while fetching calendars from %s. This list may be incomplete.',
-          ucfirst($api_definition['vendor'])
-        ), 'warning');
+        $this->messenger()
+          ->addWarning('An error occurred while fetching calendars from @vendor. This list may be incomplete.', [
+            '@vendor' => ucfirst($api_definition['vendor']),
+          ]);
         return $entities;
       }
       foreach ($calendar_ids as $foreign_id => $title) {
@@ -89,7 +89,8 @@ class HoursCalendarListBuilder extends ConfigEntityListBuilder {
     $api_manager = $container->get('plugin.manager.calendar_hours.calendar_api');
     return new static(
       $entity_type,
-      $container->get('entity.manager')->getStorage($entity_type->id()),
+      $container->get('entity_type.manager')
+        ->getStorage($entity_type->id()),
       $api_manager
     );
   }
