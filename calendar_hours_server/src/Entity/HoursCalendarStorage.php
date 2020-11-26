@@ -12,11 +12,13 @@ use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Messenger\MessengerTrait;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class HoursCalendarStorage extends ConfigEntityStorage {
 
   use MessengerTrait;
+  use StringTranslationTrait;
 
   protected $apiManager;
 
@@ -73,9 +75,9 @@ class HoursCalendarStorage extends ConfigEntityStorage {
       }
       catch (\Exception $e) {
         $this->messenger()
-          ->addWarning('Could not retrieve calendar title from @vendor.', [
+          ->addWarning($this->t('Could not retrieve calendar title from @vendor.', [
             '@vendor' => ucfirst($values['vendor']),
-          ]);
+          ]));
         $hours_calendar->title = 'Unknown';
       }
     }
