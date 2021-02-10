@@ -4,6 +4,7 @@ namespace Drupal\calendar_hours_server\Plugin;
 
 use Drupal\calendar_hours_server\Entity\HoursCalendar;
 use Drupal\calendar_hours_server\Response\Block;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Plugin\PluginBase;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
@@ -84,7 +85,29 @@ abstract class CalendarApiBase extends PluginBase implements CalendarApiInterfac
    */
   abstract protected function doCreateHours(HoursCalendar $calendar, Block $block);
 
+  /**
+   * {@inheritDoc}
+   */
+  public function close(HoursCalendar $calendar, DrupalDateTime $date) {
+    if ($this->doClose($calendar, $date)) {
+      $calendar->refresh();
+      return TRUE;
+    }
+    return FALSE;
   }
+
+  /**
+   * Perform the actual removal of all events on the remote API.
+   *
+   * @param \Drupal\calendar_hours_server\Entity\HoursCalendar $calendar
+   *   The calendar.
+   * @param \Drupal\Core\Datetime\DrupalDateTime $date
+   *   The date.
+   *
+   * @return bool
+   *   TRUE if all events could successfully be removed. FALSE otherwise.
+   */
+  abstract protected function doClose(HoursCalendar $calendar, DrupalDateTime $date);
 
   /**
    * Retrieve a depending service.

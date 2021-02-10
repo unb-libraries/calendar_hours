@@ -111,7 +111,7 @@ class GoogleCalendarApi extends CalendarApiBase {
   /**
    * {@inheritDoc}
    */
-  public function close(HoursCalendar $calendar, DrupalDateTime $date) {
+  public function doClose(HoursCalendar $calendar, DrupalDateTime $date) {
     $events = $this->getEventQuery($calendar->foreign_id)
       ->setStartDate($date)
       ->setEndDate($date)
