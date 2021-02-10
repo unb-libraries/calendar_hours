@@ -92,7 +92,7 @@ class GoogleCalendarApi extends CalendarApiBase {
   /**
    * {@inheritDoc}
    */
-  public function createHours(HoursCalendar $calendar, Block $block) {
+  public function doCreateHours(HoursCalendar $calendar, Block $block) {
     $start = new \Google_Service_Calendar_EventDateTime();
     $start->setDateTime($block->getStart()->format('c'));
     $end = new \Google_Service_Calendar_EventDateTime();

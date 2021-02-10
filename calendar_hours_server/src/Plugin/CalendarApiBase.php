@@ -3,6 +3,7 @@
 namespace Drupal\calendar_hours_server\Plugin;
 
 use Drupal\calendar_hours_server\Entity\HoursCalendar;
+use Drupal\calendar_hours_server\Response\Block;
 use Drupal\Core\Plugin\PluginBase;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
@@ -58,6 +59,30 @@ abstract class CalendarApiBase extends PluginBase implements CalendarApiInterfac
    *   TRUE if hours could be successfully set. FALSE otherwise.
    */
   abstract protected function doSetHours(HoursCalendar $calendar, $event_id, $from, $to);
+
+  /**
+   * {@inheritDoc}
+   */
+  public function createHours(HoursCalendar $calendar, Block $block) {
+    if ($this->doCreateHours($calendar, $block)) {
+      $calendar->refresh();
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Perform the actual creation of a new block of hours on the remote API.
+   *
+   * @param \Drupal\calendar_hours_server\Entity\HoursCalendar $calendar
+   *   The calendar to receive the block.
+   * @param \Drupal\calendar_hours_server\Response\Block $block
+   *   The block.
+   *
+   * @return bool
+   *   TRUE if the hours could successfully be created. FALSE otherwise.
+   */
+  abstract protected function doCreateHours(HoursCalendar $calendar, Block $block);
 
   }
 
