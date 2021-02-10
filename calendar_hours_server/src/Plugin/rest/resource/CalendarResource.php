@@ -129,6 +129,7 @@ class CalendarResource extends ResourceBase {
         'hours' => $hours,
         'reopensAt' => $opens_at ? $opens_at->format('c') : '',
         'closesAt' => $closes_at ? $closes_at->format('c') : '',
+        'lastRefreshed' => (new DrupalDateTime('now', $calendar->getTimezone()))->format('c'),
       ], 200);
 
       $response->setMaxAge(900);
