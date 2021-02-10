@@ -147,6 +147,13 @@ class HoursCalendarListBuilder extends ConfigEntityListBuilder {
           'url' => $entity->toUrl('edit-hours-form'),
         ];
       }
+      if ($entity->hasLinkTemplate('refresh')) {
+        $operations['refresh'] = [
+          'title' => t('Refresh'),
+          'weight' => 80,
+          'url' => $entity->toUrl('refresh'),
+        ];
+      }
     }
 
     return isset($operations) ? $operations : parent::getDefaultOperations($entity);

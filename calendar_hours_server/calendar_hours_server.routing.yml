@@ -30,6 +30,14 @@ entity.hours_calendar.edit_hours_form:
   requirements:
     _permission: 'edit hours'
 
+entity.hours_calendar.refresh:
+  path: 'admin/config/services/hours/calendars/{hours_calendar}/refresh'
+  defaults:
+    _entity_form: 'hours_calendar.refresh'
+    _title: 'Refresh'
+  requirements:
+    _permission: 'refresh hours calendars'
+
 entity.hours_calendar.enable:
   path: '/admin/config/services/hours/calendars/enable'
   defaults:

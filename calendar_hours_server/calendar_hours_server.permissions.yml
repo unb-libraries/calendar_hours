@@ -6,3 +6,6 @@ create hours:
 
 edit hours:
   title: 'Edit hours'
+
+refresh hours calendars:
+  title: 'Refresh hours calendars'

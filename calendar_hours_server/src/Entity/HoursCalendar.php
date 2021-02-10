@@ -23,6 +23,7 @@ use Drupal\Core\Entity\Annotation\ConfigEntityType;
  *       "edit_hours" = "Drupal\calendar_hours_server\Form\HoursCalendarEditHoursForm",
  *       "enable" = "Drupal\calendar_hours_server\Form\HoursCalendarForm",
  *       "disable" = "Drupal\calendar_hours_server\Form\HoursCalendarDisableForm",
+ *       "refresh" = "Drupal\calendar_hours_server\Form\HoursCalendarRefreshForm",
  *     }
  *   },
  *   config_prefix = "hours_calendar",
@@ -44,6 +45,7 @@ use Drupal\Core\Entity\Annotation\ConfigEntityType;
  *     "edit-hours-form" = "/admin/config/services/hours/calendars/{hours_calendar}/hours",
  *     "enable" = "/admin/config/services/hours/calendars/{vendor}/{foreign_id}/enable",
  *     "disable" = "/admin/config/services/hours/calendars/{hours_calendar}/disable",
+ *     "refresh" = "/admin/config/services/hours/calendars/{hours_calendar}/refresh",
  *   }
  * )
  */
