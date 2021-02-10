@@ -71,8 +71,7 @@ class GoogleCalendarApi extends CalendarApiBase {
   /**
    * {@inheritDoc}
    */
-  public function setHours(HoursCalendar $calendar, $event_id, $from, $to) {
-    parent::setHours($calendar, $event_id, $from, $to);
+  public function doSetHours(HoursCalendar $calendar, $event_id, $from, $to) {
     $start = new \Google_Service_Calendar_EventDateTime();
     $start->setDateTime($from);
     $end = new \Google_Service_Calendar_EventDateTime();

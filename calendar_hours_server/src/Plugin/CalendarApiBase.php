@@ -35,7 +35,30 @@ abstract class CalendarApiBase extends PluginBase implements CalendarApiInterfac
    * {@inheritDoc}
    */
   public function setHours(HoursCalendar $calendar, $event_id, $from, $to) {
-    $calendar->refresh();
+    if ($this->doSetHours($calendar, $event_id, $from, $to)) {
+      $calendar->refresh();
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Perform the actual hours update on the remote API.
+   *
+   * @param \Drupal\calendar_hours_server\Entity\HoursCalendar $calendar
+   *   The calendar containing the hours information.
+   * @param string $event_id
+   *   ID of the event to update.
+   * @param string $from
+   *   Earliest Date to be included in the hours response.
+   * @param string $to
+   *   Latest Date to be included in the hours response.
+   *
+   * @return bool
+   *   TRUE if hours could be successfully set. FALSE otherwise.
+   */
+  abstract protected function doSetHours(HoursCalendar $calendar, $event_id, $from, $to);
+
   }
 
   /**
