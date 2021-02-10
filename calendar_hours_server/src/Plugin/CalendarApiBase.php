@@ -3,7 +3,6 @@
 namespace Drupal\calendar_hours_server\Plugin;
 
 use Drupal\calendar_hours_server\Entity\HoursCalendar;
-use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Plugin\PluginBase;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
@@ -30,6 +29,13 @@ abstract class CalendarApiBase extends PluginBase implements CalendarApiInterfac
     catch (ServiceNotFoundException $e) {
       echo $e->getMessage();
     }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function setHours(HoursCalendar $calendar, $event_id, $from, $to) {
+    $calendar->refresh();
   }
 
   /**

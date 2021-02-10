@@ -2,6 +2,7 @@
 
 namespace Drupal\calendar_hours_google\Plugin\calendar_hours\api;
 
+use Drupal\calendar_hours_server\Annotation\CalendarApi;
 use Drupal\calendar_hours_server\Entity\HoursCalendar;
 use Drupal\calendar_hours_server\Plugin\CalendarApiBase;
 use Drupal\calendar_hours_server\Response\Block;
@@ -71,6 +72,7 @@ class GoogleCalendarApi extends CalendarApiBase {
    * {@inheritDoc}
    */
   public function setHours(HoursCalendar $calendar, $event_id, $from, $to) {
+    parent::setHours($calendar, $event_id, $from, $to);
     $start = new \Google_Service_Calendar_EventDateTime();
     $start->setDateTime($from);
     $end = new \Google_Service_Calendar_EventDateTime();

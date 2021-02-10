@@ -138,9 +138,7 @@ class CalendarResource extends ResourceBase {
           'contexts' => [
             'url.query_args'
           ],
-          'tags' => [
-            'calendar_hours_' . $calendar_id,
-          ]
+          'tags' => $calendar->getCacheTags(),
         ],
       ]));
     }

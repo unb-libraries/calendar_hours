@@ -6,6 +6,7 @@ use Drupal\calendar_hours_server\Plugin\CalendarApiInterface;
 use Drupal\calendar_hours_server\Response\Block;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Entity\Annotation\ConfigEntityType;
 
 /**
  * ConfigEntity representing a GoogleCalendar.
@@ -88,6 +89,16 @@ class HoursCalendar extends ConfigEntityBase {
    */
   public function setCalendarApi(CalendarApiInterface $calendar_api) {
     $this->calendarApi = $calendar_api;
+  }
+
+  /**
+   * Retrieve the cache tags invalidator.
+   *
+   * @return \Drupal\Core\Cache\CacheTagsInvalidatorInterface
+   *   A cache tags invalidator object.
+   */
+  protected function cacheTagsInvalidator() {
+    return \Drupal::service('cache_tags.invalidator');
   }
 
   /**
@@ -236,6 +247,15 @@ class HoursCalendar extends ConfigEntityBase {
 
   public function getTimezone() {
     return $this->calendarApi->getTimezone($this);
+  }
+
+  /**
+   * Clear any cache-tagged hours responses.
+   */
+  public function refresh() {
+    $cache_tags = $this->getCacheTags();
+    $this->cacheTagsInvalidator()
+      ->invalidateTags($cache_tags);
   }
 
   /**
