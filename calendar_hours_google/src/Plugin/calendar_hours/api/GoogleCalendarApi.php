@@ -71,7 +71,7 @@ class GoogleCalendarApi extends CalendarApiBase {
   /**
    * {@inheritDoc}
    */
-  public function doSetHours(HoursCalendar $calendar, $event_id, $from, $to) {
+  protected function doSetHours(HoursCalendar $calendar, $event_id, $from, $to) {
     $start = new \Google_Service_Calendar_EventDateTime();
     $start->setDateTime($from);
     $end = new \Google_Service_Calendar_EventDateTime();
@@ -92,7 +92,7 @@ class GoogleCalendarApi extends CalendarApiBase {
   /**
    * {@inheritDoc}
    */
-  public function doCreateHours(HoursCalendar $calendar, Block $block) {
+  protected function doCreateHours(HoursCalendar $calendar, Block $block) {
     $start = new \Google_Service_Calendar_EventDateTime();
     $start->setDateTime($block->getStart()->format('c'));
     $end = new \Google_Service_Calendar_EventDateTime();
@@ -111,7 +111,7 @@ class GoogleCalendarApi extends CalendarApiBase {
   /**
    * {@inheritDoc}
    */
-  public function doClose(HoursCalendar $calendar, DrupalDateTime $date) {
+  protected function doClose(HoursCalendar $calendar, DrupalDateTime $date) {
     $events = $this->getEventQuery($calendar->foreign_id)
       ->setStartDate($date)
       ->setEndDate($date)
