@@ -15,7 +15,12 @@ use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class HoursCalendarStorage extends ConfigEntityStorage {
+/**
+ * Storage handler for "hours_calendar" config entities.
+ *
+ * @package Drupal\calendar_hours_server\Entity
+ */
+class HoursCalendarStorage extends ConfigEntityStorage implements HoursCalendarStorageInterface {
 
   use MessengerTrait;
   use StringTranslationTrait;

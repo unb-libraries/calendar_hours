@@ -3,12 +3,11 @@
 namespace Drupal\calendar_hours_server\Plugin\rest\resource;
 
 use Drupal\calendar_hours_server\Entity\HoursCalendar;
-use Drupal\calendar_hours_server\Entity\HoursCalendarStorage;
+use Drupal\calendar_hours_server\Entity\HoursCalendarStorageInterface;
 use Drupal\calendar_hours_server\Plugin\FormatterPluginManager;
 use Drupal\calendar_hours_server\Response\Block;
 use Drupal\calendar_hours_server\Response\HoursResponse;
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
@@ -40,7 +39,7 @@ class CalendarResource extends ResourceBase {
   /**
    * GoogleCalendarApiController constructor.
    *
-   * @param \Drupal\calendar_hours_server\Entity\HoursCalendarStorage $hours_calendar_storage
+   * @param \Drupal\calendar_hours_server\Entity\HoursCalendarStorageInterface $hours_calendar_storage
    *   The Storage manager for HoursCalendar entities.
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -53,7 +52,7 @@ class CalendarResource extends ResourceBase {
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    */
-  public function __construct(HoursCalendarStorage $hours_calendar_storage, array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger) {
+  public function __construct(HoursCalendarStorageInterface $hours_calendar_storage, array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger) {
     $this->calendarStorage = $hours_calendar_storage;
     parent::__construct(
       $configuration,
