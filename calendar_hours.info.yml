@@ -2,5 +2,6 @@ name: 'Calendar Hours'
 type: module
 description: 'Enable Businesses and Institutions to sync their hours via (an) externally hosted calendar(s).'
 core: 8.x
+core_version_requirement: ^8 || ^9
 hidden: true
 package: Calendar Hours
