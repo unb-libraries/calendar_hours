@@ -15,7 +15,13 @@
       "email": "libsystems@unb.ca"
     }
   ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/unb-libraries/gapi"
+    }
+  ],
   "require": {
-    "drupal/gapi": "1.x-dev"
+    "unb-libraries/gapi": "dev-9.x-1.x"
   }
 }
