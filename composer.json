@@ -3,25 +3,11 @@
   "description": "Maintain hours through external calendars.",
   "type": "drupal-module",
   "license": "MIT",
-  "homepage": "https://github.com/unb-libraries/calendar_hours",
   "minimum-stability": "dev",
-  "support": {
-    "issues": "https://github.com/unb-libraries/calendar_hours/issues",
-    "source": "https://github.com/unb-libraries/calendar_hours"
-  },
   "authors": [
     {
       "name": "UNB Libraries",
       "email": "libsystems@unb.ca"
     }
-  ],
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/unb-libraries/gapi"
-    }
-  ],
-  "require": {
-    "unb-libraries/gapi": "dev-9.x-1.x"
-  }
+  ]
 }
