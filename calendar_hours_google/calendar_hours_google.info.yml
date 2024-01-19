@@ -1,8 +1,7 @@
 name: 'Google Calendar Hours'
 type: module
 description: 'Connect to Google Calendar API'
-core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9 || ^10
 package: Calendar Hours
 dependencies:
   - calendar_hours_server

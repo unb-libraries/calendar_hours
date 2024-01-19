@@ -31,7 +31,7 @@ calendar-hours:
   dependencies:
     - core/drupal
     - core/drupalSettings
-    - core/backbone
+    - core/internal.backbone
     - core/jquery
     - calendar_hours_client/momentjs
     - calendar_hours_client/backbone.localstorage
